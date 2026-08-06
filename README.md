@@ -8,7 +8,7 @@ Live at <https://qubbo-dev.github.io/meetgigtick/>
 
 ```
 index.html            the whole site — one file, no build step
-assets/icon.png       app icon, used as the logo and favicon
+assets/icon.png       app icon, used for the favicon and the social preview
 screenshots/          drop real app screenshots here (see its README)
 .nojekyll             tells GitHub Pages to serve the files as-is
 ```
@@ -34,6 +34,12 @@ the `<style>` block:
 - `.glass` — the liquid-glass panel. Change it once and every panel follows.
 - `.perf` / `.stub` — the ticket perforation and the notched stub shape used
   by the pricing cards.
+
+The logo itself is not `assets/icon.png` — it's a 96px copy of the icon
+inlined as a data URI in the `--logo` custom property, because a relative
+`<img>` doesn't resolve when `index.html` is opened straight off disk. All
+three logo marks read from that one copy. To change it, regenerate the
+data URI from a new icon; the PNG in `assets/` stays for the favicon.
 
 Typefaces are loaded from Google Fonts: Archivo for headlines, Instrument
 Sans for body text, Space Mono for anything that would be printed on a

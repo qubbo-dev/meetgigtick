@@ -54,7 +54,14 @@
   --f-display:"Archivo", system-ui, sans-serif;
   --f-body:"Instrument Sans", system-ui, sans-serif;
   --f-stub:"Space Mono", ui-monospace, monospace;
+
+  /* The app icon, inlined. A relative <img> works on the deployed site but not
+     reliably when index.html is opened straight off disk, and the logo has to
+     survive both. All three marks share this one copy. */
+  --logo:url("data:image/jpeg;base64,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");
 }
+
+.mark{ display:block; flex:none; border-radius:8px; background:var(--logo) center/cover no-repeat }
 
 *,*::before,*::after{box-sizing:border-box}
 
@@ -199,7 +206,7 @@ section{ padding-block:clamp(4.5rem, 9vw, 8.5rem); position:relative }
   padding:.5rem .55rem .5rem 1rem;
 }
 .brand{ display:flex; align-items:center; gap:.6rem; text-decoration:none; margin-inline-end:auto }
-.brand img{ width:30px; height:30px; border-radius:8px; display:block }
+.brand .mark{ width:30px; height:30px }
 .brand b{ font-family:var(--f-display); font-weight:800; font-variation-settings:"wdth" 115; letter-spacing:-.02em; font-size:1.08rem }
 .nav-links{ display:flex; gap:1.5rem; align-items:center }
 .nav-links a{
@@ -409,7 +416,7 @@ section{ padding-block:clamp(4.5rem, 9vw, 8.5rem); position:relative }
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.14), inset 0 1px 0 rgba(255,255,255,.22);
 }
 .m-la-top{ display:flex; align-items:center; gap:.6em }
-.m-la-top img{ width:1.7em; height:1.7em; border-radius:.45em; flex:none }
+.m-la-top .mark{ width:1.7em; height:1.7em; border-radius:.45em }
 .m-la-top b{ font-size:.95em; font-weight:700; letter-spacing:-.01em; flex:1 }
 .m-live{
   display:inline-flex; align-items:center; gap:.35em; font-family:var(--f-stub);
@@ -583,7 +590,7 @@ footer{ padding-block:2.6rem 3.5rem; color:var(--dim); font-size:.86rem }
 <div class="nav-wrap">
   <nav class="nav glass">
     <a class="brand" href="#top">
-      <img src="assets/icon.png" alt="">
+      <span class="mark"></span>
       <b>Gigtick</b>
     </a>
     <div class="nav-links">
@@ -800,7 +807,7 @@ footer{ padding-block:2.6rem 3.5rem; color:var(--dim); font-size:.86rem }
                 </div>
                 <div class="m-la">
                   <div class="m-la-top">
-                    <img src="assets/icon.png" alt="">
+                    <span class="mark"></span>
                     <b>Nick Cave</b>
                     <span class="m-live"><span class="rec"></span> LIVE</span>
                   </div>
@@ -1043,7 +1050,7 @@ footer{ padding-block:2.6rem 3.5rem; color:var(--dim); font-size:.86rem }
 <footer>
   <div class="shell foot">
     <div style="display:flex; align-items:center; gap:.7rem">
-      <img src="assets/icon.png" alt="" width="26" height="26" style="border-radius:7px; display:block">
+      <span class="mark" style="width:26px; height:26px; border-radius:7px"></span>
       <span class="mono">Gigtick 1.2 · iOS 26</span>
     </div>
     <div class="foot-links">
