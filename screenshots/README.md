@@ -1,33 +1,47 @@
 # Screenshots
 
-Drop real App Store screenshots in here and they replace the hand-built
-mockups on the page automatically. Three slots are wired up:
+Eight screens, one per phone on the page:
 
-| File            | Where it shows                | Suggested screen                    |
-| --------------- | ----------------------------- | ----------------------------------- |
-| `home.png`      | Hero, the big phone           | Home tab                            |
-| `concert.png`   | Smart Import section          | A concert detail with photos + setlist |
-| `live.png`      | Instant Track section         | Lock Screen with the Live Activity  |
+| File                 | Where it shows                              |
+| -------------------- | ------------------------------------------- |
+| `home.webp`          | Hero, the big phone                         |
+| `smart-import.webp`  | Smart Import                                 |
+| `photos-found.webp`  | Memories, left phone of the pair             |
+| `memories.webp`      | Memories, right phone of the pair            |
+| `live.webp`          | Instant Track                                |
+| `setlist.webp`       | The music                                    |
+| `weather.webp`       | The rest of it, left figure                  |
+| `profile.webp`       | The rest of it, right figure                 |
 
-## What to export
+## Why they need no device frame
 
-Take them on a modern iPhone (any 19.5:9 device) and **crop off the device
-bezel** — the page draws its own frame, status bar and Dynamic Island around
-the image. A plain screenshot straight from the phone is exactly right.
+These already arrive wearing one — a device mockup on a **transparent**
+background. The page adds only light around them, and `drop-shadow` follows
+the real phone silhouette instead of a rectangle. Don't put them back inside
+a CSS frame; you'd get two.
 
-Portrait, 9:19.5, PNG. Anything from 1170×2532 up is plenty.
+A raw screenshot straight off the phone would need a frame drawn for it, so
+if you swap one in, either mock it up the same way first or expect it to sit
+flat on the page.
 
-## How the swap works
+## Replacing one
 
-Each phone on the page has a `.shot` layer sitting on top of the mockup:
+Keep the filename and the page picks it up. The originals live in `_source/`
+(git-ignored, so they stay on your disk and out of the repo). To regenerate
+the shipped copies from them:
 
-```html
-<div class="shot" style="--shot:url('screenshots/home.png')"></div>
+```
+python3 -c "
+from PIL import Image
+im = Image.open('_source/YOUR FILE.png').convert('RGBA')
+w = 700; h = round(im.height * w / im.width)
+im.resize((w, h), Image.LANCZOS).save('name.webp', 'WEBP', quality=82, method=6)
+"
 ```
 
-If the file exists, it paints over the mockup. If it doesn't, the CSS
-resolves to nothing and the mockup underneath shows instead — so the page
-never breaks, and you can add the three screenshots one at a time.
+700px wide is 2× the largest size any phone is displayed at, and WebP keeps
+the alpha channel. The eight files together come to about 540 KB — as PNG
+the same set was 5.9 MB, which is why they aren't PNG.
 
-To wire up a fourth phone somewhere, copy any `.device` block in
-`index.html` and point its `--shot` at a new filename.
+Every phone below the hero is `loading="lazy"` and carries explicit
+`width`/`height`, so nothing shifts as they arrive.
