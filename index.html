@@ -307,8 +307,22 @@ section{ padding-block:clamp(4.5rem, 9vw, 8.5rem); position:relative }
   margin-top:1.5rem; display:flex; flex-wrap:wrap; gap:.5rem 1.4rem; justify-content:center;
   font-family:var(--f-stub); font-size:.665rem; letter-spacing:.18em; text-transform:uppercase; color:var(--dim);
 }
-.hero-stage{ margin-top:clamp(3rem, 6vw, 4.5rem); display:flex; justify-content:center }
-.hero-stage .phone-wrap{ --pw:min(330px, 78vw) }
+/* Three screens, the home one leading. The side pair sits smaller, lower and
+   slightly behind, so the montage reads as one object rather than a row. */
+.hero-stage{ margin-top:clamp(3rem, 6vw, 4.5rem); display:flex; justify-content:center; align-items:flex-start }
+.hero-stage .lead{ --pw:min(320px, 34vw); z-index:2 }
+.hero-stage .side{ --pw:min(238px, 25vw); z-index:1; margin-top:clamp(2.5rem, 6vw, 4.5rem) }
+.hero-stage .side:first-child{ margin-right:clamp(-3.5rem, -3.5vw, -2rem) }
+.hero-stage .side:last-child{ margin-left:clamp(-3.5rem, -3.5vw, -2rem) }
+.hero-stage .side::before{ opacity:.55 }
+.hero-stage .side .phone{ filter:drop-shadow(0 20px 38px rgba(0,0,0,.5)) drop-shadow(0 0 50px rgba(158,89,242,.22)) }
+
+/* Below this the three no longer fit side by side without shrinking the lead
+   past the point where its screen is readable. */
+@media (max-width:760px){
+  .hero-stage .side{ display:none }
+  .hero-stage .lead{ --pw:min(330px, 78vw) }
+}
 
 /* ---------------- Modes ------------------------------------- */
 .modes{ display:grid; gap:var(--gap); grid-template-columns:repeat(auto-fit, minmax(255px,1fr)); margin-top:3rem }
@@ -505,8 +519,14 @@ footer{ padding-block:2.6rem 3.5rem; color:var(--dim); font-size:.86rem }
     </div>
 
     <div class="hero-stage">
-      <div class="phone-wrap">
+      <div class="phone-wrap side">
+        <img class="phone" src="screenshots/setlist.webp" width="700" height="1435" alt="A concert's setlist: 35 songs in the order they were played, with buttons to open it on setlist.fm or build an Apple Music playlist.">
+      </div>
+      <div class="phone-wrap lead">
         <img class="phone" src="screenshots/home.webp" width="700" height="1435" alt="The Gigtick home screen: a greeting, the next concert coming up, and cards for stats and badges.">
+      </div>
+      <div class="phone-wrap side">
+        <img class="phone" src="screenshots/memories.webp" width="700" height="1435" alt="A concert's gallery: a grid of videos from a Linkin Park show, each with its running time.">
       </div>
     </div>
   </div>
