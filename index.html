@@ -246,8 +246,11 @@ section{ padding-block:clamp(4.5rem, 9vw, 8.5rem); position:relative }
 .badge-link:hover{ transform:translateY(-2px); filter:drop-shadow(0 16px 32px rgba(250,92,140,.55)) }
 .badge-link:active{ transform:translateY(0) }
 .badge{ display:block; width:var(--bw, 178px); height:auto }
-.nav .badge-link{ --bw:124px; filter:none }
-.nav .badge-link:hover{ filter:none }
+
+/* The nav keeps a house button rather than Apple's badge — a black lockup
+   inside the glass bar fought everything around it. Deliberately not their
+   wording or artwork; the real badge carries the store attribution below. */
+.nav-cta svg{ width:.95em; height:.95em; opacity:.85 }
 
 /* ---------------- Phones ------------------------------------
    The screenshots arrive already wearing their device frame, on a
@@ -276,7 +279,29 @@ section{ padding-block:clamp(4.5rem, 9vw, 8.5rem); position:relative }
   background:linear-gradient(102deg, var(--violet) 8%, var(--rose) 62%, var(--amber) 112%);
   -webkit-background-clip:text; background-clip:text; color:transparent;
 }
-.hero .lede{ margin:1.7rem auto 0; text-align:center; max-width:53ch }
+/* Names the app right under the headline — the headline sells the idea, this
+   says whose idea it is. Glass so it reads as a chip, not another sentence. */
+.hero-id{
+  --r:999px;
+  display:inline-flex; align-items:center; gap:.62rem;
+  margin:1.6rem auto 0; padding:.42rem 1.05rem .42rem .45rem;
+  border-radius:999px; font-size:.95rem; color:var(--haze);
+  background:rgba(246,242,248,.05);
+  box-shadow:inset 0 0 0 1px var(--hair), inset 0 1px 0 rgba(255,255,255,.14);
+  backdrop-filter:blur(16px) saturate(150%); -webkit-backdrop-filter:blur(16px) saturate(150%);
+}
+.hero-id .mark{ width:26px; height:26px; border-radius:7px }
+/* Keep it to one line — a fully rounded pill wrapping to two reads as a blob */
+@media (max-width:600px){
+  .hero-id{ font-size:.82rem; gap:.5rem; padding:.36rem .85rem .36rem .38rem }
+  .hero-id .mark{ width:22px; height:22px; border-radius:6px }
+}
+.hero-id b{
+  font-family:var(--f-display); font-weight:800; font-variation-settings:"wdth" 112;
+  letter-spacing:-.015em; color:var(--paper);
+}
+
+.hero .lede{ margin:1.15rem auto 0; text-align:center; max-width:53ch }
 .hero-cta{ display:flex; flex-wrap:wrap; gap:.8rem; justify-content:center; margin-top:2.2rem }
 .hero-facts{
   margin-top:1.5rem; display:flex; flex-wrap:wrap; gap:.5rem 1.4rem; justify-content:center;
@@ -445,8 +470,9 @@ footer{ padding-block:2.6rem 3.5rem; color:var(--dim); font-size:.86rem }
       <a href="#live">Live</a>
       <a href="#price">Premium</a>
     </div>
-    <a class="badge-link" href="https://apps.apple.com/app/id6783332108">
-      <svg class="badge" viewBox="0 0 119.66407 40" role="img" aria-label="Download on the App Store"><use href="#appstore-badge"/></svg>
+    <a class="btn nav-cta" href="https://apps.apple.com/app/id6783332108">
+      Get Gigtick
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v10.2l3.6-3.6 1.4 1.4-6 6-6-6 1.4-1.4L10 13.2V3zM5 19h14v2H5z"/></svg>
     </a>
   </nav>
 </div>
@@ -456,7 +482,13 @@ footer{ padding-block:2.6rem 3.5rem; color:var(--dim); font-size:.86rem }
   <div class="shell">
     <span class="stub-label">Your concert diary app</span>
     <h1>Every show<em>remembered.</em></h1>
-    <p class="lede">Gigtick finds the concerts hiding in your camera roll, pulls in the setlist, and keeps them beside the shows you're going to and the ones you still dream about.</p>
+
+    <p class="hero-id">
+      <span class="mark" aria-hidden="true"></span>
+      <span>That's <b>Gigtick</b> — a concert diary for iPhone</span>
+    </p>
+
+    <p class="lede">It finds the concerts hiding in your camera roll, pulls in the setlist, and keeps them beside the shows you're going to and the ones you still dream about.</p>
 
     <div class="hero-cta">
       <a class="badge-link" href="https://apps.apple.com/app/id6783332108" style="--bw:196px">
