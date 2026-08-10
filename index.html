@@ -68,6 +68,11 @@
 html{ -webkit-text-size-adjust:100%; scroll-behavior:smooth }
 @media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto } }
 
+/* Both elements, and clip rather than hidden. overflow-x:hidden on body alone
+   leaves the document itself pannable on iOS Safari, which is what let the
+   page be nudged sideways; clip also avoids making body a scroll container. */
+html, body{ overflow-x:hidden; overflow-x:clip }
+
 body{
   margin:0;
   background:var(--room);
@@ -77,7 +82,6 @@ body{
   line-height:1.62;
   font-synthesis-weight:none;
   -webkit-font-smoothing:antialiased;
-  overflow-x:hidden;
 }
 
 /* Film grain, so the big soft washes never band -------------- */
@@ -261,6 +265,9 @@ section{ padding-block:clamp(4.5rem, 9vw, 8.5rem); position:relative }
   content:""; position:absolute; z-index:-1; inset:-14% -26%;
   background:radial-gradient(closest-side, rgba(250,92,140,.26), rgba(158,89,242,.12) 58%, transparent 78%);
 }
+/* On a phone the screen is the constraint, not the composition: at -26% the
+   glow reached past the viewport and had to be clipped away anyway. */
+@media (max-width:760px){ .phone-wrap::before{ inset:-10% -8% } }
 .phone{
   display:block; width:100%; height:auto;
   filter:drop-shadow(0 24px 44px rgba(0,0,0,.55)) drop-shadow(0 0 64px rgba(158,89,242,.3));
