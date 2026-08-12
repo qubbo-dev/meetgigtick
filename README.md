@@ -45,6 +45,26 @@ Typefaces are loaded from Google Fonts: Archivo for headlines, Instrument
 Sans for body text, Space Mono for anything that would be printed on a
 ticket (dates, venues, prices, section labels).
 
+## Being findable
+
+`index.html` carries a `<link rel="canonical">` and a block of JSON-LD
+describing the app (name, developer, category, the App Store link, three
+screenshots). There is also a `sitemap.xml`.
+
+**If the site ever moves to its own domain, three things must change or Google
+will keep pointing at the old address:** the `canonical` link, every absolute
+URL inside the JSON-LD, and the `<loc>` in `sitemap.xml`.
+
+The JSON-LD deliberately has no `aggregateRating`. Inventing review counts is
+the fastest way to get structured data ignored or penalised — add one only when
+there are real numbers to quote.
+
+There is no `robots.txt`, and one can't usefully be added: it has to sit at the
+root of the domain (`qubbo-dev.github.io/robots.txt`), which belongs to a
+user-site repo that doesn't exist. No robots.txt means everything is allowed,
+which is what we want anyway. A custom domain would make the site the root, and
+then it becomes possible.
+
 ## Keeping it honest
 
 The page describes Gigtick 1.2. If a claim changes in the app, these are the

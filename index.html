@@ -7,6 +7,10 @@
 <meta name="description" content="Every show remembered. Gigtick finds the concerts hiding in your camera roll, pulls in the setlist, and keeps every gig — the ones you saw, the ones you're going to and the ones you still dream about — in one place. For iPhone.">
 <meta name="theme-color" content="#0A0610">
 
+<!-- The official address. Update this first if the site ever moves to its own
+     domain, or Google will keep treating the github.io URL as the real one. -->
+<link rel="canonical" href="https://qubbo-dev.github.io/meetgigtick/">
+
 <link rel="icon" href="assets/icon.png" type="image/png">
 <link rel="apple-touch-icon" href="assets/icon.png">
 
@@ -20,6 +24,39 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62.5..125,100..900&family=Instrument+Sans:wght@400..700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<!-- What the page is about, in the form search engines read. Every field here
+     is taken from the App Store listing or the app itself. Deliberately no
+     aggregateRating: inventing review counts is what gets structured data
+     penalised, and there are no real numbers to put in yet. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "MobileApplication",
+  "name": "Gigtick",
+  "alternateName": "Gigtick: Concert Diary",
+  "url": "https://qubbo-dev.github.io/meetgigtick/",
+  "description": "A concert diary for iPhone and iPad. Gigtick finds the concerts hiding in your camera roll, pulls in the setlist, and keeps them beside the shows you're going to and the ones you still dream about.",
+  "applicationCategory": "Music",
+  "operatingSystem": "iOS 26.0 or later",
+  "inLanguage": ["en", "sk"],
+  "image": "https://qubbo-dev.github.io/meetgigtick/assets/icon.png",
+  "screenshot": [
+    "https://qubbo-dev.github.io/meetgigtick/screenshots/home.webp",
+    "https://qubbo-dev.github.io/meetgigtick/screenshots/setlist.webp",
+    "https://qubbo-dev.github.io/meetgigtick/screenshots/live.webp"
+  ],
+  "installUrl": "https://apps.apple.com/app/id6783332108",
+  "downloadUrl": "https://apps.apple.com/app/id6783332108",
+  "author": { "@type": "Person", "name": "Jakub Babiak" },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "EUR",
+    "description": "Free to download, with an optional Gigtick Premium subscription"
+  }
+}
+</script>
 
 <style>
 /* ============================================================
