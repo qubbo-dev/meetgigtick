@@ -15,6 +15,7 @@
 <link rel="apple-touch-icon" href="assets/icon.png">
 
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="Gigtick">
 <meta property="og:title" content="Gigtick — Your Concert Diary App">
 <meta property="og:description" content="Every show remembered. It finds the concerts hiding in your camera roll, pulls in the setlist, and keeps every gig in one place.">
 <meta property="og:url" content="https://qubbo-dev.github.io/meetgigtick/">
@@ -55,6 +56,20 @@
     "priceCurrency": "EUR",
     "description": "Free to download, with an optional Gigtick Premium subscription"
   }
+}
+</script>
+
+<!-- What the site is called. Google was labelling the result "GitHub Pages
+     documentation", guessed from the qubbo-dev.github.io domain. Google reads
+     the site name from a domain's home page, so this may not override it while
+     the site lives in a subdirectory — a custom domain is the real fix. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Gigtick",
+  "alternateName": "Gigtick — Your Concert Diary App",
+  "url": "https://qubbo-dev.github.io/meetgigtick/"
 }
 </script>
 
@@ -582,7 +597,10 @@ footer{ padding-block:2.6rem 3.5rem; color:var(--dim); font-size:.86rem }
 <header class="hero" id="top">
   <div class="shell">
     <span class="stub-label">Your concert diary app</span>
-    <h1>Every show<em>remembered.</em></h1>
+    <!-- The space matters even though <em> is a block and the line breaks
+         anyway: without it the headline extracts as "Every showremembered."
+         to search engines and screen readers. -->
+    <h1>Every show <em>remembered.</em></h1>
 
     <p class="hero-id">
       <span class="mark" aria-hidden="true"></span>
