@@ -2,7 +2,7 @@
 
 The product site for **Gigtick** — the concert diary for iPhone.
 
-Live at <https://qubbo-dev.github.io/meetgigtick/>
+Live at <https://meetgigtick.com/>
 
 ## What's here
 
