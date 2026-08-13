@@ -11,8 +11,12 @@
      domain, or Google will keep treating the github.io URL as the real one. -->
 <link rel="canonical" href="https://meetgigtick.com/">
 
-<link rel="icon" href="assets/icon.png" type="image/png">
-<link rel="apple-touch-icon" href="assets/icon.png">
+<!-- Google takes one favicon per hostname and reads it from the home page, so
+     these only started counting once the site got its own domain. The 1024px
+     icon stays for the social preview; nothing should pull 822KB to draw 16px. -->
+<link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="icon" href="assets/icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="assets/icon-192.png">
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Gigtick">
