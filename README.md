@@ -41,12 +41,13 @@ inlined as a data URI in the `--logo` custom property, because a relative
 three logo marks read from that one copy. To change it, regenerate the
 data URI from a new icon; the PNG in `assets/` stays as the favicons' source.
 
-The favicons (`favicon.ico` at 16/32/48 and `assets/favicon-192.png`) are the
-icon cut to the iOS app-icon shape, continuous corners at 22.37%, with
-transparent corners. `assets/apple-touch-icon.png` (180px) must stay square:
-iOS rounds it itself and paints transparency black. When the icon changes,
-regenerate all three and bump the `?v=` on the favicon link, or browsers keep
-showing the old one.
+The favicons (`favicon.ico` at 16/32/48 and `assets/favicon-192.png`) come
+from the rounded icon exported from Affinity (`gigikonka_light v3 corners`,
+kept with the design files), trimmed of the few pixels of transparent border
+around the shape so it fills the square. `assets/apple-touch-icon.png` (180px)
+must stay square: iOS rounds it itself and paints transparency black. When the
+icon changes, regenerate all three and bump the `?v=` on both favicon links,
+or browsers keep showing the old one.
 
 Typefaces are loaded from Google Fonts: Archivo for headlines, Instrument
 Sans for body text, Space Mono for anything that would be printed on a
