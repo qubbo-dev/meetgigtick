@@ -13,10 +13,14 @@
 
 <!-- Google takes one favicon per hostname and reads it from the home page, so
      these only started counting once the site got its own domain. The 1024px
-     icon stays for the social preview; nothing should pull 822KB to draw 16px. -->
-<link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48">
-<link rel="icon" href="assets/icon-192.png" type="image/png" sizes="192x192">
-<link rel="apple-touch-icon" href="assets/icon-192.png">
+     icon stays for the social preview; nothing should pull 822KB to draw 16px.
+     The favicons wear the app icon's rounded corners on a transparent ground,
+     but the apple-touch-icon stays square: iOS rounds it itself and paints
+     transparent corners black. ?v=2 makes browsers drop the square one they
+     cached. -->
+<link rel="icon" href="favicon.ico?v=2" sizes="16x16 32x32 48x48">
+<link rel="icon" href="assets/favicon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Gigtick">
