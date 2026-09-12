@@ -594,7 +594,7 @@ footer{ padding-block:2.6rem 3.5rem; color:var(--dim); font-size:.86rem }
       <a href="#live">Live</a>
       <a href="#price">Premium</a>
     </div>
-    <a class="btn nav-cta" href="https://apps.apple.com/app/id6783332108">
+    <a class="btn nav-cta" href="https://apps.apple.com/app/apple-store/id6783332108?pt=129066596&amp;ct=web&amp;mt=8">
       Get Gigtick
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v10.2l3.6-3.6 1.4 1.4-6 6-6-6 1.4-1.4L10 13.2V3zM5 19h14v2H5z"/></svg>
     </a>
@@ -618,7 +618,7 @@ footer{ padding-block:2.6rem 3.5rem; color:var(--dim); font-size:.86rem }
     <p class="lede">It finds the concerts hiding in your camera roll, pulls in the setlist, and keeps them beside the shows you're going to and the ones you still dream about.</p>
 
     <div class="hero-cta">
-      <a class="badge-link" href="https://apps.apple.com/app/id6783332108" style="--bw:196px">
+      <a class="badge-link" href="https://apps.apple.com/app/apple-store/id6783332108?pt=129066596&amp;ct=web&amp;mt=8" style="--bw:196px">
         <svg class="badge" viewBox="0 0 119.66407 40" role="img" aria-label="Download on the App Store"><use href="#appstore-badge"/></svg>
       </a>
       <a class="btn lg ghost" href="#what">See how it works</a>
@@ -963,7 +963,7 @@ footer{ padding-block:2.6rem 3.5rem; color:var(--dim); font-size:.86rem }
             <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg><span><b>Unlimited Instant Track</b> for every night of the tour</span></li>
             <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg><span><b>Full stats and Year in Review</b> — the map, the genres, the whole recap</span></li>
           </ul>
-          <a class="btn" href="https://apps.apple.com/app/id6783332108" style="align-self:flex-start">Start the free week</a>
+          <a class="btn" href="https://apps.apple.com/app/apple-store/id6783332108?pt=129066596&amp;ct=web&amp;mt=8" style="align-self:flex-start">Start the free week</a>
         </div>
       </article>
     </div>
@@ -978,7 +978,7 @@ footer{ padding-block:2.6rem 3.5rem; color:var(--dim); font-size:.86rem }
     <h2 class="rise">How many gigs<br>have you forgotten?</h2>
     <p class="lede rise">Point Gigtick at your camera roll and find out.</p>
     <div class="hero-cta rise">
-      <a class="badge-link" href="https://apps.apple.com/app/id6783332108" style="--bw:212px">
+      <a class="badge-link" href="https://apps.apple.com/app/apple-store/id6783332108?pt=129066596&amp;ct=web&amp;mt=8" style="--bw:212px">
         <svg class="badge" viewBox="0 0 119.66407 40" role="img" aria-label="Download on the App Store"><use href="#appstore-badge"/></svg>
       </a>
     </div>
@@ -994,7 +994,7 @@ footer{ padding-block:2.6rem 3.5rem; color:var(--dim); font-size:.86rem }
       <span class="mono">Gigtick 1.2 · iOS 26</span>
     </div>
     <div class="foot-links">
-      <a href="https://apps.apple.com/app/id6783332108">App Store</a>
+      <a href="https://apps.apple.com/app/apple-store/id6783332108?pt=129066596&amp;ct=web&amp;mt=8">App Store</a>
       <a href="https://qubbo-dev.github.io/Privacy-Policy/">Privacy</a>
       <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/">Terms</a>
       <a href="mailto:support@meetgigtick.com">Contact</a>
@@ -1053,6 +1053,23 @@ footer{ padding-block:2.6rem 3.5rem; color:var(--dim); font-size:.86rem }
   targets.forEach(function (el, i) {
     el.style.transitionDelay = (i % 4) * 70 + 'ms';
     io.observe(el);
+  });
+})();
+</script>
+
+<script>
+(function () {
+  // Meta rejects an ad whose destination is an App Store link, so the ad points
+  // here with ?src=ig and the App Store campaign token is swapped in on the way
+  // out. An allowlist, so a stray ?src= in the wild cannot invent a campaign.
+  var campaigns = { ig: 'instagram' };
+  var src = new URLSearchParams(location.search).get('src');
+  if (!Object.prototype.hasOwnProperty.call(campaigns, src)) return;
+
+  document.querySelectorAll('a[href*="apps.apple.com"]').forEach(function (link) {
+    var url = new URL(link.href);
+    url.searchParams.set('ct', campaigns[src]);
+    link.href = url.href;
   });
 })();
 </script>
