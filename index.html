@@ -5,7 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Gigtick: Your Concert Diary App</title>
 <meta name="description" content="Every show remembered. Gigtick finds the concerts hiding in your camera roll, pulls in the setlist, and keeps every gig — the ones you saw, the ones you're going to and the ones you still dream about — in one place. For iPhone.">
-<meta name="theme-color" content="#0A0610">
+<meta name="theme-color" content="#FFFFFF">
+<!-- The page has its own light and dark design, so browsers that force a dark
+     mode (Samsung Internet, Chrome's auto-dark) leave it alone. -->
+<meta name="color-scheme" content="light dark">
+<!-- Light or dark before the first paint, so the page never flashes the wrong
+     one: a choice made with the toggle in the nav wins, otherwise the system's
+     setting. The browser's own bar follows along. -->
+<script>
+(function () {
+  var saved = null;
+  try { saved = localStorage.getItem('theme'); } catch (e) {}
+  var theme = saved === 'dark' || saved === 'light' ? saved
+    : (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  document.documentElement.setAttribute('data-theme', theme);
+  if (theme === 'dark') document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0B0810');
+})();
+</script>
 
 <!-- The official address. Update this first if the site ever moves to its own
      domain, or Google will keep treating the github.io URL as the real one. -->
@@ -84,20 +100,28 @@
 <style>
 /* ============================================================
    Gigtick — product site
-   A dark room, lit from off-stage. Everything that isn't light
-   is glass; everything structural is a ticket perforation. The
-   app itself is light, so its screens read as lit objects here.
+   A white, airy page that reads like the app itself. Colour is
+   rationed: the app's violet-to-rose shows up on the headline's
+   last word, the buttons, the icons and as a soft glow behind the
+   phones, and nowhere else. The ticket perforation from the app
+   icon is still the one ornament: chapter stubs, the pricing
+   tickets, the tear above the footer.
    ============================================================ */
 
 :root{
-  /* Ground: near-black, biased toward the accent rather than neutral grey */
-  --room:#0A0610;
-  --stage:#150E20;
+  color-scheme:light;
 
-  /* Ink */
-  --paper:#F6F2F8;
-  --haze:#A294B4;
-  --dim:#6E6180;
+  /* Ground. Sections alternate between the two, so a long scroll on a
+     phone still reads as separate chapters without lines drawn between. */
+  --bg:#FFFFFF;
+  --band:#F7F5FA;
+
+  /* Ink, from headings down to decoration. --ink-3 is the lightest colour
+     allowed for running text: 5.9:1 on white, 5.4:1 on the band. */
+  --ink:#15101E;
+  --ink-2:#474055;
+  --ink-3:#686178;
+  --ink-4:#8A8398;
 
   /* The app's own palette, straight off the icon and the status tints */
   --violet:#9E59F2;   /* wishlist  */
@@ -105,11 +129,66 @@
   --indigo:#738CFA;   /* upcoming  */
   --amber:#F2B340;    /* artists, badges, premium */
 
-  --hair:rgba(246,242,248,.10);
-  --hair-soft:rgba(246,242,248,.055);
+  /* The same hues deepened until small text on white clears 4.5:1. The
+     bright ones above are for fills and glows, never for text. */
+  --violet-ink:#7E3FDB;
+  --rose-ink:#D12E66;
+  --indigo-ink:#4257D4;
+  --amber-ink:#9C6208;
 
-  --shell:min(1180px, 100% - 2.75rem);
-  --gap:clamp(1rem, 2.2vw, 1.6rem);
+  /* The highlighted words in a headline: the icon's violet into its rose,
+     each a shade deeper than the fills so they hold up as type */
+  --brand-text:linear-gradient(100deg, #8F4DEB 6%, #F2508A 72%);
+
+  /* Liquid glass, the iOS 26 material, drawn rather than computed: a clear
+     body with the icon's two colours pooling at the bottom as if lit from
+     behind, a specular sheen across the top, a rim brightest along the upper
+     edge, and a lift. No backdrop-filter: over these flat grounds a blur has
+     nothing to blur, and it's the one effect that costs scrolling in
+     Instagram's browser. Only the nav, which floats over content, blurs. */
+  --glass-body:
+    radial-gradient(120% 90% at 50% -30%, rgba(255,255,255,.95), rgba(255,255,255,0) 58%),
+    radial-gradient(60% 130% at 18% 118%, rgba(250,92,140,.26), rgba(250,92,140,0) 70%),
+    radial-gradient(60% 130% at 82% 122%, rgba(158,89,242,.24), rgba(158,89,242,0) 70%),
+    linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,255,255,.42));
+  --glass-rim:
+    inset 0 1px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(255,255,255,.6),
+    inset 1px 0 0 rgba(255,255,255,.65), inset -1px 0 0 rgba(255,255,255,.45),
+    inset 0 -12px 20px -14px rgba(158,89,242,.4);
+  --glass-edge:0 0 0 1px rgba(46,22,84,.1);
+  --glass-lift:0 14px 30px -16px rgba(46,22,84,.36), 0 4px 10px -6px rgba(224,61,119,.25);
+
+  --line:rgba(21,16,30,.08);
+  --line-strong:rgba(21,16,30,.14);
+  --shadow-sm:0 1px 2px rgba(21,16,30,.05), 0 3px 10px -4px rgba(46,22,84,.08);
+  --shadow:0 1px 2px rgba(21,16,30,.04), 0 16px 36px -18px rgba(46,22,84,.2);
+
+  /* The rest of what changes with the theme (dark values under Dark) */
+  --surface:#fff;
+  --perf:rgba(21,16,30,.2);
+  --perf-strong:rgba(21,16,30,.22);
+  --selection:rgba(158,89,242,.18);
+  --glow-a:rgba(250,92,140,.2);
+  --glow-b:rgba(158,89,242,.13);
+  --phone-filter:drop-shadow(0 0 .6px rgba(21,16,30,.4)) drop-shadow(0 24px 30px rgba(46,22,84,.17));
+  --phone-filter-side:drop-shadow(0 0 .6px rgba(21,16,30,.35)) drop-shadow(0 18px 24px rgba(46,22,84,.14));
+  --ticket-filter:drop-shadow(0 0 .6px rgba(21,16,30,.34)) drop-shadow(0 18px 26px rgba(46,22,84,.12));
+  --panel-bg:
+    radial-gradient(60% 80% at 12% 0%, rgba(158,89,242,.18), transparent 70%),
+    radial-gradient(55% 75% at 92% 100%, rgba(250,92,140,.16), transparent 70%),
+    #F7F5FA;
+  --pro-bg:linear-gradient(180deg, #FFF5E3 0, #fff 186px);
+  --pro-price:linear-gradient(100deg, #B26A04, #D12E66);
+  --card-hover-shadow:0 0 0 1px var(--line-strong), 0 26px 48px -22px rgba(46,22,84,.32);
+  --glass-lift-hover:0 0 0 1px rgba(46,22,84,.14), 0 18px 34px -16px rgba(46,22,84,.42), 0 4px 10px -6px rgba(224,61,119,.3);
+  --nav-bg:rgba(255,255,255,.86);
+  --nav-bg-top:rgba(255,255,255,.5);
+  --nav-rim:inset 0 1px 0 rgba(255,255,255,.95), inset 0 -10px 18px -14px rgba(158,89,242,.3);
+  --nav-edge-top:rgba(21,16,30,.05);
+  --nav-lift:rgba(46,22,84,.28);
+
+  --shell:min(1120px, 100% - 3rem);
+  --gap:clamp(1rem, 2vw, 1.4rem);
 
   --f-display:"Archivo", system-ui, sans-serif;
   --f-body:"Instrument Sans", system-ui, sans-serif;
@@ -121,11 +200,88 @@
   --logo:url("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4QBMRXhpZgAATU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAYKADAAQAAAABAAAAYAAAAAD/7QA4UGhvdG9zaG9wIDMuMAA4QklNBAQAAAAAAAA4QklNBCUAAAAAABDUHYzZjwCyBOmACZjs+EJ+/8AAEQgAYABgAwEiAAIRAQMRAf/EAB8AAAEFAQEBAQEBAAAAAAAAAAABAgMEBQYHCAkKC//EALUQAAIBAwMCBAMFBQQEAAABfQECAwAEEQUSITFBBhNRYQcicRQygZGhCCNCscEVUtHwJDNicoIJChYXGBkaJSYnKCkqNDU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6g4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2drh4uPk5ebn6Onq8fLz9PX29/j5+v/EAB8BAAMBAQEBAQEBAQEAAAAAAAABAgMEBQYHCAkKC//EALURAAIBAgQEAwQHBQQEAAECdwABAgMRBAUhMQYSQVEHYXETIjKBCBRCkaGxwQkjM1LwFWJy0QoWJDThJfEXGBkaJicoKSo1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoKDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uLj5OXm5+jp6vLz9PX29/j5+v/bAEMAAgICAgICAwICAwQDAwMEBQQEBAQFBgUFBQUFBggGBgYGBgYICAgICAgICAkJCQkJCQsLCwsLDAwMDAwMDAwMDP/bAEMBAgICAwMDBQMDBQwIBwgMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDP/dAAQABv/aAAwDAQACEQMRAD8A4wqc9zRtq0EPWl8onk1/cEsUjsp4LyKwBHvTgpHJJAq0IsUCPPJOa5Z4o76WB7oYELVIExxUyrjH86l289K454o9KlgOyIAnGRTgpBq3syMCk8ok7VBJJwAO5PYVzSxfmd1PL32IQtOUHdmrL20kLmOZGjkHVXBVh9QeRSiI4z69q5J4xdz0KWW+QxFB5FTBT2p6xke1TJGSc1x1MYenSy3yP//QwhHipBGAKn2EnNO8vH0Ff15UxfmfoVLLX2K+wng9KUQ7RVgKARxUiozc44FcdTGW6nqUMr8iukYNWPKyMk4A716z8Ofg147+Jtwo8NaeRZhtsmoXOYrSP1/eEfOR/dQMfpX6G/DH9lzwH4E8nU9cUeItYTDebcoBaxN/0xtySMjszlj3GK+SznjDB4C8ZS5p/wAq3+fb5/cY47HYPArlqO8v5Vv8+x8JfDH9nP4hfEpor2C2/sjRnIJ1G+VlV1/6YRcPL7EYX/ar9Fvhl+z78PPhisV3ZWn9p6ug51K9VXlVu/kpjZEP90bvVjXZeOviBp3w+bRJdZtZjp2q36adLfRlRDYvKp8l588hHb5cgYHU+/fmvyrPOKcyx0VzPkpSvZLrbe73fpovI+NzHNsTiIptcsHeyXW3d9f60Pkz9qr4RR+M/Cp8aaJbg63oSNJMI1+e6sgMyKccs0WN6e24DqK/L8JkAj8K/c3xl4q0jwP4X1HxVrhb7Fp8JkkVAC8hJCpGoOAWdiFGeMnnivxV128sNU1zUNT0uyGnWl1cyzQWatvEEcjlljDcZ2g46V9JwXmmIeFlQqL3YvR+u6/X5+h9rwN7WvRnSnG8YvR/p+vz9DA8upEi+b8an28Zp6rlq+rqY1n6PTy5H//RiCY7U8xgnFWxGAeea+uP2a/gT4X+JVte+KPFc7z2unXYtk06J9nmOEWQtO6/MEO4AKpXODk9q/oXM87p4SjKvVei7H7ljPYYGg8RXvyrsfOHgr4c+L/iFqQ03wlpst8ykebKBsghB7yzN8i/TOT2Br79+GP7Ifhbw55Wq/ECZdf1AYYWiZSwjb3Bw8xH+1hf9g19Z6Ro2k+H9Pi0nQ7OCws4BiOC3RY41/4CoAye5PJ71pV+VZtxljMVeFB+zj5bv59PkfneZ8VYjEXp4dezh5bv59Pl95h6pqnh/wAG6DLqWpzW+laTpyLvcgRwwoSEUBVGAMkAADvWpY3tpqVpDf6dPHc2twgkimiYPHIjDIZWU4IPqK+e/wBqLxFoOm/CfVtB1C8ii1DVlhSyticyzGO4jdmCjkKqqSWPA6ZyQK/Ozwn8VPiP4H0m40Pwrrk9hY3J3GIBJBG3dofMVvKLfxFMZ+tcGAyKWMwzrxlaV7a7Naa39bnRknB2IzTBvEUZWlzW969mrLW/rc/YTxN4a0XxhoN54Z8RWwutPv4/LmjJK5GQQVYYKspAZWByCM1zXg/xlomp6vrPgOzgubK98KNDatDdkF5rYxr5NzG25i8bjjcfmz1614h+yZ/wk2p+Fdb8V+JNUvNSbU79YoTdzyTYFsmHdd5ONzPtOP7teyeOzonguK9+La6HJqeraZYi1la2fZMbEzK8uQTtYRDMnIJwCAQK4K1FUqk8I5c1trbc2nR/ceVicu+r4uplkpOck7Rtoud26N2/ut/M1viL4LtfiF4L1Twhdym3F/EBHMBu8uWNhJE+O4DqMjuMivz9tv2Q/inJezW0sulwwxhilwbhmSUj7oVFTeN3+0Biv0o0rVNP1zTLTWdKmW4s76FJ4JUOQ8cihlP5Hp2q/V4LN8Tg4SpUno+/c1yjiTH5VGdGhbV6qSvZ7ff3ufhjf6beaXf3Ol6jC1vd2crwTxOMMkkbbWUj2IqBEwea+3/2tvhettcw/E7R4wI7lktdVRRjEuNsM/8AwIDy2PqF9TXxQFAIJr7Ohmyr0lUX9M/o7hrGUs1wNPG0uujXaS3X+XlZn//S0gpOQRXvf7PPxMb4aeOYl1CUrous7LS/BPyxkn9zcf8AbNjhj/cZvavE/KG2gxgrjrX6/jJwr0pUamqkj+qcXktLF0J4esvdkrf8H1W5+6nUZHIPII6YpK/GST4mfEpkso18UarGmnxpFbLHdSRrGiDCjCEBsAYy2Tiv04+AvjTWvHvw00/XPEPz36SzWss4UKJ/IfaJcAAZYYDYGNwOPSvzbH5TPCwU3JNH4fxHwPi8nw0cVVmpRbtpfTe2/oeIfFf9lvWPFmuan4x0XxFJeXl2zzfZNSUttXllghmTO1F+6ilMAd+9fCelaJqmtajDo+kWc13f3DmOO3iXdIzAEkAewBJ9MHNfuAOv0rxP4e/BPQ/APizXPF0c/wBsudUnla0VowgsoJnMjxrycsScFuPlAGOTnswefVadKUKjvZe6e5wzx/LB4OvTxr5pRivZq1rvazaWy0eutk+p4B+znpvxk8A+Ih4c1nw7fp4b1NmaZpwqpZzBSROhLHhsBXUdeCORz9zyRxzRvDMivHIpR0YZVlYYIIPUEdafWfqmq6ZodhNqms3cNjZwLuknuHWONR7s3H0HevHxWJeIqe0cbN9j4rO82lm2M+sqioTlZNRvq++revTTscR8N/A118PrHUdAivhdaOb6S40mAqQ9nbzfO1uzEncquTtwOn142fGHjrwp4C006p4q1CKyiOfLRjummYD7sUS5Zz9Bgd8V8nfEr9rWOMy6R8MLcTPyrardoRGPe3gbBb2aTA/2TXxVrOtax4i1KTWNfvZ9QvZj801w5dsegzwqjsqgAdhXTTwc6j56zt+Z+kZF4YZnm1b67nD9lGWrVlzy87bRb6t631a1ue+/Gb9oW/8AibYv4a0WxOnaF5yyMZjuubkxnKb9p2xqDhtoycgZPavm8KCR0FSBSaeqAtjvXqQqQpR5IaI/fsk4cwmWYdYXB0+WK17tvu292f/T6YD06CnDkfSpNntShQPxr9Bni7H9wwwnkOt3gjnie6jaSFZFMqK21mQEblDdiRkA9q/ZnwG3hiTwbpEngqNIdEktUezjj6KjckNkk7w2d+STuznmvxlCetfYX7Lvxas/DtzP4B8TXiW+n3bGfT553CRxXB/1kJZuFWT7y5ONwPdq8HNr1oJp7H574ocL4jG5ZHE4a7dF3cV1T3du8d15XP0EpGZURnchVUEsxOAAOSST0FeK/EL4+/D/AOH8TQvdrq+plcx2Ng6yN7ebIMpGPqd3opr4G+I3xu8efEtpLXULj+ztJY/LptmSsZHbzn4aU/73y+iivDp0JS1eiPybhbw1zfOmqnJ7Kl/PJb/4VvL8F5n2H8Sv2ovCPhQy6V4RVfEOqrlS8bYsoWH9+Yf6wj+7Hx6sK+DvGnj/AMY/EO++3eLdRe72kmK2X5LaD2jhHyj/AHjlj3JrkBGqjA6DtUgCjvXdT5KfwrXuf0nwx4d5XkkVKhDmqdZy1l8ukV6fNsiCjoKXaB14qXB7UmMDJoliD7unhl0QoHanKBuz0pVGRmnhcmsJ1zohhtdj/9TtMcc96QjgZ71Oq8c0NGcE9K92WKR/oTDCEOCOKQxBlIYcHrUoTjIqQLg1zTxNzthg7dCBIkjGFAH4VJjjJqTAApOvSuSVc6o4cYFBXnNL5YqUL8vtTSD2rKVdG8cOGAaTaaeMcCpAF79q5pVzeNFLcYFyeaeBzxxUgII+U01cE7c5NYOq2aJI/9k=");
 }
 
-.mark{ display:block; flex:none; border-radius:8px; background:var(--logo) center/cover no-repeat }
+/* One class per status colour: the hue for fills, its deepened twin for text
+   and icons, and a pale tint for the squares the icons sit on. */
+.c-rose{   --c:var(--rose);   --ci:var(--rose-ink);   --ct:#FFE9F0 }
+.c-violet{ --c:var(--violet); --ci:var(--violet-ink); --ct:#F3EBFE }
+.c-indigo{ --c:var(--indigo); --ci:var(--indigo-ink); --ct:#ECEFFF }
+.c-amber{  --c:var(--amber);  --ci:var(--amber-ink);  --ct:#FFF3DA }
+
+/* ---------------- Dark ---------------------------------------
+   The same page after dark: a near-black ground leaning violet, the panels and
+   the glass lit from inside by the same two colours, the tickets as dark card
+   stock. The app's screens stay light, so on this ground they read as what
+   they are at a gig: the brightest thing in the room. Switched by data-theme
+   on <html>, which the script in <head> sets from the toggle's saved choice,
+   else from the system. Text colours keep the light theme's rule: --ink-3 is
+   the faintest used for running text (7:1 here). */
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0B0810;
+  --band:#110C18;
+  --surface:#171121;
+  --ink:#F5F1FA;
+  --ink-2:#D2CADD;
+  --ink-3:#A9A1B8;
+  --ink-4:#7F768E;
+  --violet-ink:#B893FF;
+  --rose-ink:#FF7FAA;
+  --indigo-ink:#9AABFF;
+  --amber-ink:#F4C46A;
+  --brand-text:linear-gradient(100deg, #A873FF 6%, #FF6FA0 72%);
+  --line:rgba(255,255,255,.09);
+  --line-strong:rgba(255,255,255,.16);
+  --shadow-sm:0 1px 2px rgba(0,0,0,.4), 0 3px 10px -4px rgba(0,0,0,.5);
+  --shadow:0 1px 2px rgba(0,0,0,.35), 0 18px 40px -18px rgba(0,0,0,.75);
+  --perf:rgba(255,255,255,.18);
+  --perf-strong:rgba(255,255,255,.24);
+  --selection:rgba(158,89,242,.38);
+  --glow-a:rgba(250,92,140,.26);
+  --glow-b:rgba(158,89,242,.2);
+  --phone-filter:drop-shadow(0 24px 34px rgba(0,0,0,.6)) drop-shadow(0 0 48px rgba(158,89,242,.22));
+  --phone-filter-side:drop-shadow(0 18px 28px rgba(0,0,0,.55)) drop-shadow(0 0 40px rgba(158,89,242,.16));
+  --ticket-filter:drop-shadow(0 0 .6px rgba(255,255,255,.35)) drop-shadow(0 18px 30px rgba(0,0,0,.6));
+  --panel-bg:
+    radial-gradient(60% 80% at 12% 0%, rgba(158,89,242,.3), transparent 70%),
+    radial-gradient(55% 75% at 92% 100%, rgba(250,92,140,.24), transparent 70%),
+    #140E1E;
+  --pro-bg:linear-gradient(180deg, rgba(242,179,64,.15) 0, rgba(242,179,64,0) 186px), #171121;
+  --pro-price:linear-gradient(100deg, #F6C567, #FF7FAA);
+  --card-hover-shadow:0 0 0 1px var(--line-strong), 0 26px 48px -22px rgba(0,0,0,.85);
+  --glass-body:
+    radial-gradient(120% 90% at 50% -30%, rgba(255,255,255,.2), rgba(255,255,255,0) 58%),
+    radial-gradient(60% 130% at 18% 118%, rgba(250,92,140,.32), rgba(250,92,140,0) 70%),
+    radial-gradient(60% 130% at 82% 122%, rgba(158,89,242,.34), rgba(158,89,242,0) 70%),
+    linear-gradient(180deg, rgba(255,255,255,.1), rgba(255,255,255,.04));
+  --glass-rim:
+    inset 0 1px 0 rgba(255,255,255,.3), inset 0 -1px 0 rgba(255,255,255,.08),
+    inset 1px 0 0 rgba(255,255,255,.12), inset -1px 0 0 rgba(255,255,255,.06),
+    inset 0 -12px 20px -14px rgba(158,89,242,.55);
+  --glass-edge:0 0 0 1px rgba(255,255,255,.08);
+  --glass-lift:0 14px 30px -16px rgba(0,0,0,.8), 0 4px 12px -6px rgba(224,61,119,.3);
+  --glass-lift-hover:0 0 0 1px rgba(255,255,255,.14), 0 18px 34px -16px rgba(0,0,0,.85), 0 4px 12px -6px rgba(224,61,119,.4);
+  --nav-bg:rgba(22,15,32,.82);
+  --nav-bg-top:rgba(22,15,32,.5);
+  --nav-rim:inset 0 1px 0 rgba(255,255,255,.14), inset 0 -10px 18px -14px rgba(158,89,242,.45);
+  --nav-edge-top:rgba(255,255,255,.05);
+  --nav-lift:rgba(0,0,0,.6);
+}
+:root[data-theme="dark"] .c-rose{   --ct:rgba(250,92,140,.16) }
+:root[data-theme="dark"] .c-violet{ --ct:rgba(158,89,242,.2) }
+:root[data-theme="dark"] .c-indigo{ --ct:rgba(115,140,250,.18) }
+:root[data-theme="dark"] .c-amber{  --ct:rgba(242,179,64,.16) }
+
+.mark{
+  display:block; flex:none; border-radius:8px;
+  background:var(--logo) center/cover no-repeat;
+  box-shadow:0 1px 3px rgba(46,22,84,.22);
+}
 
 *,*::before,*::after{ box-sizing:border-box }
 
-html{ -webkit-text-size-adjust:100%; scroll-behavior:smooth }
+/* The padding keeps a section's heading clear of the floating nav when a
+   link jumps to it. */
+html{ -webkit-text-size-adjust:100%; scroll-behavior:smooth; scroll-padding-top:5.5rem }
 @media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto } }
 
 /* Both elements, and clip rather than hidden. overflow-x:hidden on body alone
@@ -135,79 +291,32 @@ html, body{ overflow-x:hidden; overflow-x:clip }
 
 body{
   margin:0;
-  background:var(--room);
-  color:var(--paper);
+  background:var(--bg);
+  color:var(--ink-2);
   font-family:var(--f-body);
   font-size:clamp(1rem, .96rem + .18vw, 1.075rem);
   line-height:1.62;
   font-synthesis-weight:none;
   -webkit-font-smoothing:antialiased;
 }
+::selection{ background:var(--selection) }
 
-/* Film grain, so the big soft washes never band -------------- */
-body::after{
-  content:"";
-  position:fixed; inset:0; z-index:60; pointer-events:none;
-  opacity:.055;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='150' height='150' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
-/* ---------------- The room: stage light behind everything ---- */
-.room{ position:fixed; inset:0; z-index:-2; background:var(--room); overflow:hidden }
-.beam{ position:absolute; border-radius:50%; mix-blend-mode:screen; will-change:transform }
-.beam.b1{ width:78vmax; height:78vmax; top:-34vmax; left:-20vmax;
-  background:radial-gradient(closest-side, rgba(158,89,242,.50), rgba(158,89,242,0) 100%);
-  animation:drift-a 34s ease-in-out infinite alternate }
-.beam.b2{ width:64vmax; height:64vmax; top:6vmax; right:-26vmax;
-  background:radial-gradient(closest-side, rgba(250,92,140,.42), rgba(250,92,140,0) 100%);
-  animation:drift-b 41s ease-in-out infinite alternate }
-.beam.b3{ width:58vmax; height:58vmax; bottom:-24vmax; left:14vmax;
-  background:radial-gradient(closest-side, rgba(115,140,250,.30), rgba(115,140,250,0) 100%);
-  animation:drift-c 47s ease-in-out infinite alternate }
-.beam.b4{ width:40vmax; height:40vmax; bottom:22vmax; right:2vmax;
-  background:radial-gradient(closest-side, rgba(242,179,64,.17), rgba(242,179,64,0) 100%);
-  animation:drift-b 53s ease-in-out infinite alternate-reverse }
-
-@keyframes drift-a{ to{ transform:translate3d(9vmax, 6vmax, 0) scale(1.14) } }
-@keyframes drift-b{ to{ transform:translate3d(-11vmax, 8vmax, 0) scale(1.09) } }
-@keyframes drift-c{ to{ transform:translate3d(7vmax, -7vmax, 0) scale(1.16) } }
-
-@media (prefers-reduced-motion: reduce){ .beam{ animation:none } }
-
-/* ---------------- Liquid glass ------------------------------ */
-.glass{
+/* ---------------- Surfaces ---------------------------------- */
+/* A white card: a hairline for the edge and a soft, violet-tinted shadow for
+   the lift. No backdrop blur anywhere but the nav — on a light page it buys
+   nothing you can see, and it costs scrolling in Instagram's in-app browser. */
+.card{
   position:relative;
-  border-radius:var(--r, 26px);
-  background:linear-gradient(177deg,
-      rgba(255,255,255,.085) 0%,
-      rgba(255,255,255,.030) 46%,
-      rgba(255,255,255,.015) 100%);
-  backdrop-filter:blur(28px) saturate(170%);
-  -webkit-backdrop-filter:blur(28px) saturate(170%);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.22),
-    inset 0 -22px 40px -30px rgba(255,255,255,.16),
-    0 26px 64px -30px rgba(0,0,0,.9);
-}
-/* The rim: bright where the light hits, gone where it doesn't */
-.glass::before{
-  content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
-  padding:1px;
-  background:linear-gradient(147deg,
-      rgba(255,255,255,.46) 0%,
-      rgba(255,255,255,.07) 34%,
-      rgba(255,255,255,0) 58%,
-      rgba(255,255,255,.14) 100%);
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-          mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor; mask-composite:exclude;
+  border-radius:var(--r, 22px);
+  background:var(--surface);
+  box-shadow:0 0 0 1px var(--line), var(--shadow);
 }
 
 /* ---------------- Ticket furniture -------------------------- */
 .perf{
   height:1px; border:0; margin:0;
   background-image:repeating-linear-gradient(90deg,
-    rgba(246,242,248,.26) 0 3px, transparent 3px 11px);
+    var(--perf) 0 3px, transparent 3px 10px);
 }
 
 .stub{
@@ -224,65 +333,80 @@ body::after{
 /* ---------------- Type -------------------------------------- */
 h1,h2,h3,h4{
   font-family:var(--f-display);
-  font-weight:800;
-  font-variation-settings:"wdth" 112;
-  letter-spacing:-.028em;
-  line-height:1.03;
+  font-weight:780;
+  font-variation-settings:"wdth" 104;
+  letter-spacing:-.03em;
+  line-height:1.05;
+  color:var(--ink);
   text-wrap:balance;
   margin:0;
 }
-h2{ font-size:clamp(2.1rem, 1.35rem + 3.1vw, 3.85rem) }
-h3{ font-size:clamp(1.3rem, 1.1rem + .8vw, 1.7rem); letter-spacing:-.02em; line-height:1.14 }
-h4{ font-size:1.02rem; letter-spacing:-.012em; font-weight:700; font-variation-settings:"wdth" 105 }
+h2{ font-size:clamp(2rem, 1.3rem + 2.9vw, 3.5rem) }
+h3{ font-size:clamp(1.25rem, 1.1rem + .6vw, 1.55rem); letter-spacing:-.02em; line-height:1.15 }
+h4{ font-size:1.02rem; letter-spacing:-.012em; font-weight:700; font-variation-settings:"wdth" 100; line-height:1.3 }
 p{ margin:0 }
 
 /* Space Mono is reserved for what would be printed on a ticket:
    section labels, dates, venues, prices, counts. Nothing else. */
 .stub-label{
-  font-family:var(--f-stub); font-size:.665rem; font-weight:700;
-  letter-spacing:.22em; text-transform:uppercase; color:var(--dim);
+  font-family:var(--f-stub); font-size:.68rem; font-weight:700;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--ink-3);
 }
 .mono{ font-family:var(--f-stub); font-variant-numeric:tabular-nums }
 
-.lede{ color:var(--haze); font-size:clamp(1.02rem, .98rem + .3vw, 1.2rem); max-width:56ch }
+.lede{ color:var(--ink-3); font-size:clamp(1.04rem, .98rem + .32vw, 1.22rem); line-height:1.58; max-width:54ch }
 
 a{ color:inherit }
 
 /* ---------------- Layout ------------------------------------ */
 .shell{ width:var(--shell); margin-inline:auto }
 
-section{ padding-block:clamp(4.5rem, 9vw, 8.5rem); position:relative }
+section{ padding-block:clamp(4.25rem, 9vw, 8rem); position:relative }
+.band{ background:var(--band) }
 
 .act-head{ display:flex; flex-direction:column; gap:1.05rem; max-width:62ch }
 
 /* ---------------- Chapter marks -----------------------------
-   Each section opens on a stub: a glass tag punched down one side, with the
-   tear line running off it. The line draws across as the section arrives —
-   the page's one moving flourish, and the ticket motif doing the moving. */
+   Each section opens on a label in liquid glass: a capsule carrying the icon's
+   sparkle, with the ticket's tear line running off it. The line draws across
+   as the section arrives. */
 .chapter{
-  display:flex; align-items:center; gap:1.05rem;
-  font-family:var(--f-stub); font-size:clamp(.76rem, .72rem + .2vw, .875rem); font-weight:700;
-  letter-spacing:.19em; text-transform:uppercase; margin:0;
+  display:flex; align-items:center; gap:1rem;
+  font-family:var(--f-stub); font-size:clamp(.8rem, .76rem + .22vw, .94rem); font-weight:700;
+  letter-spacing:.18em; text-transform:uppercase; margin:0; color:var(--ink);
 }
+/* right padding less the letter-spacing the last letter carries, so the
+   label sits optically centred in its capsule */
 .chapter span{
-  position:relative; flex:none;
-  padding:.7rem 1.25rem .7rem 1.7rem; border-radius:11px;
-  color:var(--paper);
-  background:rgba(246,242,248,.075);
-  box-shadow:inset 0 0 0 1px rgba(246,242,248,.14), inset 0 1px 0 rgba(255,255,255,.2),
-             0 10px 30px -18px rgba(0,0,0,.9);
-  backdrop-filter:blur(16px) saturate(150%); -webkit-backdrop-filter:blur(16px) saturate(150%);
+  flex:none; display:inline-flex; align-items:center; gap:.65rem;
+  padding:.82rem calc(1.4rem - .18em) .82rem 1.15rem; border-radius:999px;
+  background:var(--glass-body);
+  box-shadow:var(--glass-rim), var(--glass-edge), var(--glass-lift);
 }
-/* the punch down the stub's left edge */
+/* the icon's sparkle, in its gradient — the same star as in the strip */
+/* Each label carries its section's symbol, cut out of the brand gradient with a
+   mask so it follows the theme. The shapes are Material Icons (Apache 2.0),
+   like every other icon on the page; a label without one gets the sparkle. */
+.chapter{ --ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 0 14.6 9.4 24 12 14.6 14.6 12 24 9.4 14.6 0 12 9.4 9.4z'/%3E%3C/svg%3E") }
+.chapter[data-icon="ticket"]{ --ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M22 10V6c0-1.11-.9-2-2-2H4c-1.1 0-1.99.89-1.99 2v4c1.1 0 1.99.9 1.99 2s-.89 2-2 2v4c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-4c-1.1 0-2-.9-2-2s.9-2 2-2zm-9 7.5h-2v-2h2v2zm0-4.5h-2v-2h2v2zm0-4.5h-2v-2h2v2z'/%3E%3C/svg%3E") }
+.chapter[data-icon="wand"]{ --ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7.5 5.6L10 7 8.6 4.5 10 2 7.5 3.4 5 2l1.4 2.5L5 7zm12 9.8L17 14l1.4 2.5L17 19l2.5-1.4L22 19l-1.4-2.5L22 14zM22 2l-2.5 1.4L17 2l1.4 2.5L17 7l2.5-1.4L22 7l-1.4-2.5zm-7.63 5.29a.996.996 0 0 0-1.41 0L1.29 18.96a.996.996 0 0 0 0 1.41l2.34 2.34c.39.39 1.02.39 1.41 0L16.7 11.05a.996.996 0 0 0 0-1.41l-2.33-2.35zm-1.03 5.49l-2.12-2.12 2.44-2.44 2.12 2.12-2.44 2.44z'/%3E%3C/svg%3E") }
+.chapter[data-icon="mic"]{ --ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z'/%3E%3C/svg%3E") }
+.chapter[data-icon="photos"]{ --ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M22 16V4c0-1.1-.9-2-2-2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2zm-11-4l2.03 2.71L16 11l4 5H8l3-4zM2 6v14c0 1.1.9 2 2 2h14v-2H4V6H2z'/%3E%3C/svg%3E") }
+.chapter[data-icon="bolt"]{ --ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 2v11h3v9l7-12h-4l4-8z'/%3E%3C/svg%3E") }
+.chapter[data-icon="note"]{ --ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z'/%3E%3C/svg%3E") }
+.chapter[data-icon="shapes"]{ --ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2l-5.5 9h11zM17.5 13c-2.49 0-4.5 2.01-4.5 4.5s2.01 4.5 4.5 4.5 4.5-2.01 4.5-4.5-2.01-4.5-4.5-4.5zM3 21.5h8v-8H3z'/%3E%3C/svg%3E") }
+.chapter[data-icon="shield"]{ --ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z'/%3E%3C/svg%3E") }
+.chapter[data-icon="star"]{ --ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z'/%3E%3C/svg%3E") }
+.chapter[data-icon="question"]{ --ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z'/%3E%3C/svg%3E") }
 .chapter span::before{
-  content:""; position:absolute; left:.66rem; top:.56rem; bottom:.56rem; width:3px;
-  border-radius:2px;
-  background-image:repeating-linear-gradient(180deg,
-    var(--rose) 0 3px, transparent 3px 8px);
+  content:""; flex:none; width:1.15em; height:1.15em;
+  background:var(--brand-text);
+  -webkit-mask:var(--ico) center / contain no-repeat;
+          mask:var(--ico) center / contain no-repeat;
 }
 .chapter::after{
   content:""; flex:1 1 auto; height:1px; min-width:2rem;
-  background-image:repeating-linear-gradient(90deg, rgba(246,242,248,.42) 0 3px, transparent 3px 11px);
+  background-image:repeating-linear-gradient(90deg, var(--perf-strong) 0 3px, transparent 3px 10px);
   background-repeat:no-repeat;
   background-size:0 100%;
   transition:background-size 1.15s cubic-bezier(.19,.72,.24,1) .12s;
@@ -292,148 +416,269 @@ section{ padding-block:clamp(4.5rem, 9vw, 8.5rem); position:relative }
   .chapter::after{ background-size:100% 100%; transition:none }
 }
 
-/* ---------------- Nav --------------------------------------- */
-.nav-wrap{ position:fixed; inset-inline:0; top:max(.85rem, env(safe-area-inset-top)); z-index:50; pointer-events:none }
+/* ---------------- Nav ---------------------------------------
+   The only real frosted surface: it floats over the page, so a blur has
+   something to work on. It wears the same glass rim as the labels. */
+.nav-wrap{ position:fixed; inset-inline:0; top:max(.75rem, env(safe-area-inset-top)); z-index:50; pointer-events:none }
 .nav{
-  --r:999px;
   width:var(--shell); margin-inline:auto; pointer-events:auto;
   display:flex; align-items:center; gap:1.1rem;
-  padding:.5rem .55rem .5rem 1rem;
+  padding:.45rem .5rem .45rem .9rem;
+  border-radius:999px;
+  background:var(--nav-bg);
+  backdrop-filter:saturate(180%) blur(20px); -webkit-backdrop-filter:saturate(180%) blur(20px);
+  box-shadow:var(--nav-rim), 0 0 0 1px var(--line), 0 12px 32px -14px var(--nav-lift);
 }
-.brand{ display:flex; align-items:center; gap:.6rem; text-decoration:none; margin-inline-end:auto }
+.brand{ display:flex; align-items:center; gap:.6rem; text-decoration:none; margin-inline-end:auto; color:var(--ink) }
 .brand .mark{ width:30px; height:30px }
-.brand b{ font-family:var(--f-display); font-weight:800; font-variation-settings:"wdth" 115; letter-spacing:-.02em; font-size:1.08rem }
-.nav-links{ display:flex; gap:1.5rem; align-items:center }
-.nav-links a{ text-decoration:none; color:var(--haze); font-size:.9rem; font-weight:500; transition:color .2s; border-radius:6px }
-.nav-links a:hover{ color:var(--paper) }
+.brand b{ font-family:var(--f-display); font-weight:800; font-variation-settings:"wdth" 108; letter-spacing:-.02em; font-size:1.08rem }
+.nav-links{ display:flex; gap:1.6rem; align-items:center }
+.nav-links a{ text-decoration:none; color:var(--ink-3); font-size:.9rem; font-weight:500; transition:color .2s; border-radius:6px }
+.nav-links a:hover{ color:var(--ink) }
 
-/* ---------------- Buttons ----------------------------------- */
+/* The theme toggle: a glass disc in the nav, a moon while the page is light
+   and a sun while it's dark. Under 360px there's no room beside the App Store
+   button, and there the phone's own setting is enough. */
+.theme-toggle{
+  flex:none; width:2.5rem; height:2.5rem; padding:0; border:0; border-radius:50%; cursor:pointer;
+  display:grid; place-items:center; color:var(--ink-2);
+  background:var(--glass-body);
+  box-shadow:var(--glass-rim), var(--glass-edge);
+  transition:transform .18s cubic-bezier(.2,.9,.3,1);
+}
+.theme-toggle:hover{ transform:translateY(-1px) }
+.theme-toggle svg{ grid-area:1 / 1; width:1.2rem; height:1.2rem; fill:currentColor }
+.theme-toggle .i-sun, :root[data-theme="dark"] .theme-toggle .i-moon{ display:none }
+:root[data-theme="dark"] .theme-toggle .i-sun{ display:block }
+@media (max-width:359px){ .theme-toggle{ display:none } }
+
+/* ---------------- Buttons -----------------------------------
+   The icon's gradient, taken a shade deeper so the white label on it stays
+   readable (5.2:1 at the violet end, 4.1:1 at the rose). */
 .btn{
-  display:inline-flex; align-items:center; gap:.6rem; justify-content:center;
+  display:inline-flex; align-items:center; gap:.55rem; justify-content:center;
   text-decoration:none; border:0; cursor:pointer;
   font-family:var(--f-body); font-size:.94rem; font-weight:600; letter-spacing:-.005em;
   padding:.72rem 1.25rem; border-radius:999px; color:#fff;
-  background:linear-gradient(112deg, var(--violet), var(--rose));
-  box-shadow:0 10px 30px -10px rgba(250,92,140,.55), inset 0 1px 0 rgba(255,255,255,.32);
+  background:linear-gradient(112deg, #8A45E6, #E03D77);
+  box-shadow:0 8px 22px -10px rgba(224,61,119,.55), inset 0 1px 0 rgba(255,255,255,.25);
   transition:transform .18s cubic-bezier(.2,.9,.3,1), box-shadow .18s;
   white-space:nowrap;
+  position:relative; overflow:hidden; isolation:isolate;
 }
-.btn:hover{ transform:translateY(-2px); box-shadow:0 16px 38px -12px rgba(250,92,140,.7), inset 0 1px 0 rgba(255,255,255,.4) }
+/* A light that crosses the button: on hover on a desktop, and once by itself
+   on the nav's button a moment after the page has assembled (see Motion). */
+.btn:not(.ghost)::after{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(105deg, transparent 30%, rgba(255,255,255,.45) 50%, transparent 70%);
+  transform:translateX(-110%);
+}
+@media (hover:hover){
+  .btn:not(.ghost):hover::after{ transform:translateX(110%); transition:transform .75s cubic-bezier(.2,.8,.2,1) }
+}
+.btn:hover{ transform:translateY(-1px); box-shadow:0 12px 28px -10px rgba(224,61,119,.6), inset 0 1px 0 rgba(255,255,255,.3) }
 .btn:active{ transform:translateY(0) }
 .btn svg{ width:1.05em; height:1.05em; fill:currentColor; flex:none }
-.btn.lg{ padding:.95rem 1.7rem; font-size:1.02rem }
+.btn.lg{ padding:.9rem 1.6rem; font-size:1rem }
 .btn.ghost{
-  background:rgba(246,242,248,.055); color:var(--paper);
-  box-shadow:inset 0 0 0 1px var(--hair), inset 0 1px 0 rgba(255,255,255,.14);
-  backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+  color:var(--ink);
+  background:var(--glass-body);
+  box-shadow:var(--glass-rim), var(--glass-edge), var(--glass-lift);
 }
-.btn.ghost:hover{ background:rgba(246,242,248,.1); box-shadow:inset 0 0 0 1px rgba(246,242,248,.2) }
+.btn.ghost:hover{ box-shadow:var(--glass-rim), var(--glass-lift-hover) }
 
-:where(a,button,summary):focus-visible{ outline:2px solid var(--rose); outline-offset:3px; border-radius:8px }
+:where(a,button,summary):focus-visible{ outline:2px solid var(--violet-ink); outline-offset:3px; border-radius:8px }
 
 /* ---------------- App Store badge ---------------------------
-   Apple's official lockup, used unmodified. The black badge would sink into
-   this ground, so it sits on its own light instead of being restyled. */
+   Apple's official lockup, used unmodified. On white it finally sits the way
+   Apple drew it, so it gets no glow — only a lift on hover. */
 .badge-link{
-  display:inline-block; line-height:0; border-radius:9px;
+  display:inline-block; line-height:0; border-radius:10px;
   transition:transform .18s cubic-bezier(.2,.9,.3,1), filter .18s;
-  filter:drop-shadow(0 10px 26px rgba(158,89,242,.45));
 }
-.badge-link:hover{ transform:translateY(-2px); filter:drop-shadow(0 16px 32px rgba(250,92,140,.55)) }
+.badge-link:hover{ transform:translateY(-1px); filter:drop-shadow(0 8px 14px rgba(21,16,30,.2)) }
 .badge-link:active{ transform:translateY(0) }
 .badge{ display:block; width:var(--bw, 178px); height:auto }
 
 /* The nav keeps a house button rather than Apple's badge — a black lockup
-   inside the glass bar fought everything around it. Deliberately not their
+   inside the bar fought everything around it. Deliberately not their
    wording or artwork; the real badge carries the store attribution below. */
-.nav-cta svg{ width:.95em; height:.95em; opacity:.85 }
+.nav-cta svg{ width:.95em; height:.95em; opacity:.9 }
 
 /* ---------------- Phones ------------------------------------
    The screenshots arrive already wearing their device frame, on a
-   transparent background — so the page adds only light around them
-   and drop-shadow follows the real silhouette rather than a box. */
-.phone-wrap{ width:var(--pw, 300px); flex:none; position:relative; isolation:isolate }
+   transparent background — so the page adds only a soft glow around them,
+   and drop-shadow follows the real silhouette rather than a box. The frame
+   is pale, so the first shadow is a hairline that draws its edge on white. */
+.phone-wrap{ width:var(--pw, 290px); flex:none; position:relative; isolation:isolate }
 .phone-wrap::before{
-  content:""; position:absolute; z-index:-1; inset:-14% -26%;
-  background:radial-gradient(closest-side, rgba(250,92,140,.26), rgba(158,89,242,.12) 58%, transparent 78%);
+  content:""; position:absolute; z-index:-1; inset:-6% -22%;
+  background:radial-gradient(closest-side, var(--glow-a), var(--glow-b) 55%, transparent 80%);
 }
-/* On a phone the screen is the constraint, not the composition: at -26% the
-   glow reached past the viewport and had to be clipped away anyway. */
-@media (max-width:760px){ .phone-wrap::before{ inset:-10% -8% } }
+/* On a phone the screen is the constraint, not the composition: a wide glow
+   reaches past the viewport and has to be clipped away anyway. */
+@media (max-width:760px){ .phone-wrap::before{ inset:-4% -8% } }
 .phone{
   display:block; width:100%; height:auto;
-  filter:drop-shadow(0 24px 44px rgba(0,0,0,.55)) drop-shadow(0 0 64px rgba(158,89,242,.3));
+  filter:var(--phone-filter);
 }
 
-/* ---------------- Hero -------------------------------------- */
-.hero{ padding-block:clamp(8rem, 15vw, 12rem) clamp(3rem, 6vw, 5rem); text-align:center }
-.hero .stub-label{ display:block; margin-bottom:1.6rem }
-.hero h1{
-  font-size:clamp(2.6rem, 1.05rem + 6.4vw, 6.4rem);
-  font-weight:900; font-variation-settings:"wdth" 118;
-  letter-spacing:-.045em; line-height:.94;
+/* ---------------- Stage panel -------------------------------
+   The lilac card with the icon's two lights in opposite corners. It opens the
+   page (the hero) and closes it (the last call to download), so a visit starts
+   and ends on the same object. The lights stay still: a moving layer is
+   composited without the dithering a still one gets, and gradients this faint
+   band into visible rings (measured: 69 colour steps moving, 261 still). */
+.panel{
+  border-radius:clamp(24px, 4vw, 36px);
+  background:var(--panel-bg);
+  box-shadow:0 0 0 1px var(--line);
 }
-.hero h1 em{
-  font-style:normal; display:block;
-  background:linear-gradient(102deg, var(--violet) 8%, var(--rose) 62%, var(--amber) 112%);
+
+/* ---------------- Hero --------------------------------------
+   The phones stand in front of the panel and step out through its bottom
+   edge. --overhang is how far: about 30% of the lead phone's height, which is
+   .62 of its width (the screenshots are 700×1435). The hero's bottom padding
+   makes room for it; the lead's width lives here so both can use it. */
+.hero{
+  --lead-w:min(310px, 34vw);
+  --overhang:calc(var(--lead-w) * .62);
+  position:relative; isolation:isolate; overflow:clip;
+  padding-block:5.6rem calc(var(--overhang) + clamp(2.25rem, 5vw, 4rem));
+  text-align:center;
+}
+/* flow-root, or the stage's negative bottom margin collapses through the
+   panel and stretches it round the whole phone instead of letting it out */
+.hero-panel{ display:flow-root; padding:clamp(2.75rem, 7vw, 5.5rem) clamp(1rem, 5vw, 4rem) 0 }
+@media (max-width:600px){ .hero-panel{ padding-inline:.75rem } }
+.hero h1{
+  font-size:clamp(2.75rem, 1.2rem + 6.2vw, 6rem);
+  font-weight:790; font-variation-settings:"wdth" 104;
+  letter-spacing:-.042em; line-height:.96;
+}
+/* Each line of the headline is its own mask, so it can rise out of it on
+   load; the padding gives ascenders and descenders room inside. The gradient
+   sits on the inner span that holds the text, not on the em, because
+   background-clip:text can't reach text inside a moving child. Its top layer
+   is a warm stage light parked off to the left, swept across once on load. */
+.hero h1 .ln{ display:block; overflow:hidden; padding-block:.1em .14em; margin-block:-.1em -.14em }
+.hero h1 .ln > span{ display:inline-block }
+.hero h1 em{ font-style:normal }
+.hero h1 em > span{
+  /* room under the baseline, or background-clip:text shaves the bottom off
+     the letters */
+  padding-bottom:.06em;
+  background-image:linear-gradient(105deg, transparent 40%, rgba(255,176,84,.95) 50%, transparent 60%), var(--brand-text);
+  background-size:250% 100%, 100% 100%;
+  background-position:130% 0, 0 0;
+  background-repeat:no-repeat;
   -webkit-background-clip:text; background-clip:text; color:transparent;
 }
 /* Names the app right under the headline — the headline sells the idea, this
-   says whose idea it is. Glass so it reads as a chip, not another sentence. */
+   says whose idea it is. A glass chip so it reads as a label, not a sentence. */
 .hero-id{
-  --r:999px;
-  display:inline-flex; align-items:center; gap:.62rem;
-  margin:1.6rem auto 0; padding:.42rem 1.05rem .42rem .45rem;
-  border-radius:999px; font-size:.95rem; color:var(--haze);
-  background:rgba(246,242,248,.05);
-  box-shadow:inset 0 0 0 1px var(--hair), inset 0 1px 0 rgba(255,255,255,.14);
-  backdrop-filter:blur(16px) saturate(150%); -webkit-backdrop-filter:blur(16px) saturate(150%);
+  display:inline-flex; align-items:center; gap:.6rem;
+  margin:1.5rem auto 0; padding:.38rem 1rem .38rem .4rem;
+  border-radius:999px; font-size:.95rem; color:var(--ink-3);
+  background:var(--glass-body);
+  box-shadow:var(--glass-rim), var(--glass-edge), var(--glass-lift);
 }
 .hero-id .mark{ width:26px; height:26px; border-radius:7px }
 /* Keep it to one line — a fully rounded pill wrapping to two reads as a blob */
 @media (max-width:600px){
-  .hero-id{ font-size:.82rem; gap:.5rem; padding:.36rem .85rem .36rem .38rem }
+  .hero-id{ font-size:.82rem; gap:.5rem; padding:.34rem .85rem .34rem .36rem }
   .hero-id .mark{ width:22px; height:22px; border-radius:6px }
 }
 .hero-id b{
-  font-family:var(--f-display); font-weight:800; font-variation-settings:"wdth" 112;
-  letter-spacing:-.015em; color:var(--paper);
+  font-family:var(--f-display); font-weight:800; font-variation-settings:"wdth" 108;
+  letter-spacing:-.015em; color:var(--ink);
 }
 
-.hero .lede{ margin:1.15rem auto 0; text-align:center; max-width:53ch }
-.hero-cta{ display:flex; flex-wrap:wrap; gap:.8rem; justify-content:center; margin-top:2.2rem }
+.hero .lede{ margin:1.1rem auto 0; text-align:center; max-width:52ch }
+.hero-cta{ display:flex; flex-wrap:wrap; gap:.8rem; justify-content:center; align-items:center; margin-top:2rem }
+/* At 168px the badge stands exactly as tall as the button beside it. On a
+   phone that button is gone and the badge is the one thing to tap, so it
+   grows back. */
+.hero .badge-link{ --bw:168px }
+@media (max-width:600px){ .hero .badge-link{ --bw:188px } }
+
 /* Three screens, the home one leading. The side pair sits smaller, lower and
    slightly behind, so the montage reads as one object rather than a row. */
-.hero-stage{ margin-top:clamp(3rem, 6vw, 4.5rem); display:flex; justify-content:center; align-items:flex-start }
-.hero-stage .lead{ --pw:min(320px, 34vw); z-index:2 }
-.hero-stage .side{ --pw:min(238px, 25vw); z-index:1; margin-top:clamp(2.5rem, 6vw, 4.5rem) }
+.hero-stage{
+  margin-top:clamp(3rem, 6vw, 4.5rem); margin-bottom:calc(var(--overhang) * -1);
+  display:flex; justify-content:center; align-items:flex-start;
+}
+.hero-stage .lead{ --pw:var(--lead-w); z-index:2 }
+.hero-stage .side{ --pw:min(232px, 25vw); z-index:1; margin-top:clamp(2.5rem, 6vw, 4.5rem) }
 .hero-stage .side:first-child{ margin-right:clamp(-3.5rem, -3.5vw, -2rem) }
 .hero-stage .side:last-child{ margin-left:clamp(-3.5rem, -3.5vw, -2rem) }
-.hero-stage .side::before{ opacity:.55 }
-.hero-stage .side .phone{ filter:drop-shadow(0 20px 38px rgba(0,0,0,.5)) drop-shadow(0 0 50px rgba(158,89,242,.22)) }
+.hero-stage .side::before{ opacity:.6 }
+.hero-stage .side .phone{ filter:var(--phone-filter-side) }
 
 /* Below this the three no longer fit side by side without shrinking the lead
    past the point where its screen is readable. */
 @media (max-width:760px){
+  .hero{ --lead-w:min(300px, 74vw) }
   .hero-stage .side{ display:none }
-  .hero-stage .lead{ --pw:min(330px, 78vw) }
 }
+
+/* ---------------- What is Gigtick ---------------------------
+   The whole page in one screen, for the visitor from an ad who won't scroll:
+   what the app is in plain words, then six benefits. The sections below tell
+   each one properly. Every icon wears the app icon's own gradient, so these
+   read as the brand speaking rather than as the status colours. */
+/* "In one place." wears the hero's gradient. The em hugs its words, or the
+   gradient would spread across the heading's full width and only its middle
+   would show. The gradient itself sits on whatever element holds the text:
+   the em as written, or its one inner span once the script has wrapped it for
+   the entrance (see there for why the phrase isn't split into words). */
+.about h2 em{ font-style:normal; display:block; width:-webkit-fit-content; width:fit-content; margin-inline:auto }
+.about h2 em:not(.w), .about h2 em.w > span{
+  padding-bottom:.08em;
+  background:var(--brand-text);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.perks{
+  list-style:none; padding:0; margin:3rem 0 0;
+  display:grid; gap:2.25rem clamp(1.5rem, 3vw, 2.75rem);
+  grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
+}
+@media (min-width:960px){ .perks{ grid-template-columns:repeat(3, 1fr) } }
+/* align-content, or a benefit sharing a row with a longer one is stretched to
+   its height and the gap opens up between its heading and its text */
+.perk{ display:grid; grid-template-columns:auto 1fr; column-gap:1rem; row-gap:.3rem; align-items:start; align-content:start }
+.perk-ico{
+  grid-row:span 2; width:2.75rem; height:2.75rem; border-radius:14px;
+  display:grid; place-items:center;
+  /* glass over colour: a sheen across the top, a rim, a darker pool below */
+  background:
+    radial-gradient(120% 70% at 50% -15%, rgba(255,255,255,.55), rgba(255,255,255,0) 60%),
+    linear-gradient(140deg, var(--violet), var(--rose));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.65), inset 0 -8px 14px -10px rgba(70,10,90,.45),
+             0 10px 20px -10px rgba(224,61,119,.6);
+}
+.perk-ico svg{ width:1.3rem; height:1.3rem; fill:#fff }
+.perk h3{ font-size:1.12rem; letter-spacing:-.015em; line-height:1.25; padding-top:.2rem }
+.perk p{ color:var(--ink-3); font-size:.95rem; line-height:1.55 }
 
 /* ---------------- Modes ------------------------------------- */
-.modes{ display:grid; gap:var(--gap); grid-template-columns:repeat(auto-fit, minmax(255px,1fr)); margin-top:3rem }
-.mode{ --r:24px; padding:1.6rem 1.5rem 1.7rem; display:flex; flex-direction:column; gap:.7rem }
+.modes{ display:grid; gap:var(--gap); grid-template-columns:repeat(auto-fit, minmax(250px,1fr)); margin-top:2.75rem }
+.mode{ --r:22px; padding:1.5rem 1.4rem 1.6rem; display:flex; flex-direction:column; gap:.6rem }
 .mode-dot{
-  width:2.4rem; height:2.4rem; border-radius:12px; display:grid; place-items:center; margin-bottom:.5rem;
-  background:linear-gradient(140deg, var(--c), color-mix(in srgb, var(--c) 40%, #000));
-  box-shadow:0 8px 22px -10px var(--c), inset 0 1px 0 rgba(255,255,255,.35);
+  width:2.4rem; height:2.4rem; border-radius:12px; display:grid; place-items:center; margin-bottom:.45rem;
+  background:
+    radial-gradient(120% 70% at 50% -15%, rgba(255,255,255,.5), rgba(255,255,255,0) 60%),
+    linear-gradient(140deg, var(--c), var(--ci));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.6), inset 0 -8px 14px -10px rgba(40,10,70,.4),
+             0 8px 18px -8px var(--c);
 }
 .mode-dot svg{ width:1.15rem; height:1.15rem; fill:#fff }
-.mode h3{ font-size:1.25rem }
-.mode p{ color:var(--haze); font-size:.965rem; line-height:1.55 }
-.mode .stub-label{ color:color-mix(in srgb, var(--c) 78%, white) }
+.mode h3{ font-size:1.22rem }
+.mode p{ color:var(--ink-3); font-size:.96rem; line-height:1.55 }
+.mode .stub-label{ color:var(--ci) }
 
 /* ---------------- Split rows -------------------------------- */
-.split{ display:grid; gap:clamp(2.5rem, 5vw, 4.5rem); align-items:center; grid-template-columns:1fr }
+.split{ display:grid; gap:clamp(2.5rem, 5vw, 5rem); align-items:center; grid-template-columns:1fr }
 @media (min-width:900px){
   .split{ grid-template-columns:1fr auto }
   .split.flip{ grid-template-columns:auto 1fr }
@@ -441,102 +686,180 @@ section{ padding-block:clamp(4.5rem, 9vw, 8.5rem); position:relative }
   .split.flip .split-art{ order:1 }
 }
 .split-art{ display:flex; justify-content:center }
-.split-copy{ display:flex; flex-direction:column; gap:1.15rem }
-.split-copy h2{ font-size:clamp(1.95rem, 1.3rem + 2.3vw, 3rem) }
+.split-copy{ display:flex; flex-direction:column; gap:1.1rem }
+.split-copy h2{ font-size:clamp(1.95rem, 1.3rem + 2.2vw, 2.9rem) }
 
 /* Two phones, the second dropped so they read as a sequence */
 .phone-pair{ display:flex; gap:clamp(.7rem, 2vw, 1.5rem); align-items:flex-start }
 .phone-pair .phone-wrap{ --pw:min(215px, 40vw) }
 .phone-pair .phone-wrap:last-child{ margin-top:clamp(1.5rem, 4vw, 3rem) }
 
-/* Numbered steps — used only where the content really is a sequence */
-.steps{ display:flex; flex-direction:column; gap:1rem; margin-top:.4rem; padding:0; list-style:none; counter-reset:s }
-.steps li{ display:flex; gap:1rem; align-items:flex-start; counter-increment:s }
-.steps li::before{
-  content:counter(s,decimal-leading-zero);
-  font-family:var(--f-stub); font-size:.7rem; font-weight:700; letter-spacing:.08em;
-  color:var(--rose); padding-top:.28rem; flex:none; width:1.9rem;
+/* Numbered steps — used only where the content really is a sequence. Each
+   number sits in a liquid-glass disc, set in the headline gradient, and a
+   perforation runs from one disc down to the next like a ticket's tear. */
+.steps{
+  --disc:3.1rem;
+  display:flex; flex-direction:column; gap:1.5rem; margin-top:.6rem; padding:0; list-style:none; counter-reset:s;
 }
-.steps b{ font-weight:600; display:block; letter-spacing:-.01em }
-.steps span{ color:var(--haze); font-size:.94rem; line-height:1.5 }
+.steps li{ position:relative; display:flex; gap:1.15rem; align-items:flex-start; counter-increment:s }
+.steps li::before{
+  content:""; flex:none; width:var(--disc); height:var(--disc); border-radius:50%;
+  background:var(--glass-body);
+  box-shadow:var(--glass-rim), var(--glass-edge), var(--glass-lift);
+}
+/* The number is its own layer so it can wear the gradient: background-clip
+   paints only text the element holds itself. The gradient is sized to the
+   digit, or a disc-wide one would show the digit only its muddy middle. */
+.steps li::after{
+  content:counter(s); position:absolute; left:0; top:0; width:var(--disc); height:var(--disc);
+  display:grid; place-items:center;
+  font-family:var(--f-display); font-size:calc(var(--disc) * .47); font-weight:800; letter-spacing:-.03em; line-height:1;
+  background:var(--brand-text) 50% 50% / calc(var(--disc) * .5) 100% no-repeat;
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.steps li:not(:last-child) > div::before{
+  content:""; position:absolute; left:calc(var(--disc) / 2 - 1px); width:2px;
+  top:calc(var(--disc) + .45rem); bottom:-1.05rem;
+  background-image:repeating-linear-gradient(180deg, rgba(158,89,242,.42) 0 4px, transparent 4px 9px);
+}
+.steps li > div{ padding-top:calc(var(--disc) / 2 - .8rem) }
+.steps b{ font-weight:600; display:block; letter-spacing:-.01em; color:var(--ink); font-size:1.04rem }
+.steps span{ color:var(--ink-3); font-size:.94rem; line-height:1.5 }
+@media (max-width:600px){ .steps{ --disc:2.75rem; gap:1.3rem } }
 
 .ticks{ list-style:none; padding:0; margin:.2rem 0 0; display:flex; flex-direction:column; gap:.7rem }
-.ticks li{ display:flex; gap:.75rem; align-items:flex-start; color:var(--haze); font-size:.965rem; line-height:1.5 }
-.ticks li svg{ width:1.05rem; height:1.05rem; flex:none; margin-top:.31rem; fill:none; stroke:var(--rose); stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round }
-.ticks li b{ color:var(--paper); font-weight:600 }
+.ticks li{ display:flex; gap:.75rem; align-items:flex-start; color:var(--ink-3); font-size:.965rem; line-height:1.5 }
+.ticks li svg{ width:1.05rem; height:1.05rem; flex:none; margin-top:.31rem; fill:none; stroke:#E8457B; stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round }
+.ticks li b{ color:var(--ink); font-weight:600 }
 
 .note{
   font-family:var(--f-stub); font-size:.7rem; letter-spacing:.1em; text-transform:uppercase;
-  color:var(--dim); display:flex; align-items:center; gap:.55rem;
+  color:var(--ink-3); display:flex; align-items:center; gap:.55rem;
 }
 .note::before{ content:""; width:1.6rem; height:1px; background:currentColor; opacity:.5; flex:none }
 
 /* ---------------- Paired showcase --------------------------- */
-.showcase{ display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:clamp(2rem, 5vw, 3.5rem); margin-top:3.5rem; justify-items:center }
+.showcase{ display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:clamp(2rem, 5vw, 3.5rem); margin-top:3.25rem; justify-items:center }
 .showcase figure{ margin:0; display:flex; flex-direction:column; align-items:center; max-width:340px }
-.showcase .phone-wrap{ --pw:min(270px, 70vw) }
+.showcase .phone-wrap{ --pw:min(260px, 70vw) }
 .showcase figcaption{ margin-top:1.4rem; text-align:center }
-.showcase figcaption b{ display:block; font-family:var(--f-display); font-weight:700; font-size:1.1rem; letter-spacing:-.02em; margin-bottom:.35rem }
-.showcase figcaption span{ color:var(--haze); font-size:.93rem; line-height:1.5 }
+.showcase figcaption b{ display:block; font-family:var(--f-display); font-weight:700; font-size:1.1rem; letter-spacing:-.02em; color:var(--ink); margin-bottom:.35rem; text-wrap:balance }
+/* A block, or its lines take the taller spacing of the body text around it */
+.showcase figcaption span{ display:block; color:var(--ink-3); font-size:.93rem; line-height:1.5 }
 
 /* ---------------- Feature tiles ----------------------------- */
 .tiles{ display:grid; gap:var(--gap); grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); margin-top:3rem }
 @media (min-width:960px){ .tiles{ grid-template-columns:repeat(3,1fr) } }
-.tile{ --r:22px; padding:1.4rem 1.35rem 1.5rem; display:flex; flex-direction:column; gap:.55rem }
-.tile-ico{ width:2.1rem; height:2.1rem; border-radius:10px; display:grid; place-items:center; margin-bottom:.45rem;
-  background:color-mix(in srgb, var(--c) 24%, transparent); box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--c) 40%, transparent) }
-.tile-ico svg{ width:1.05rem; height:1.05rem; fill:var(--c) }
+.tile{ --r:20px; padding:1.35rem 1.3rem 1.45rem; display:flex; flex-direction:column; gap:.5rem }
+.tile-ico{ width:2.2rem; height:2.2rem; border-radius:11px; display:grid; place-items:center; margin-bottom:.4rem; background:var(--ct) }
+.tile-ico svg{ width:1.1rem; height:1.1rem; fill:var(--ci) }
 .tile h4{ font-size:1.02rem }
-.tile p{ color:var(--haze); font-size:.92rem; line-height:1.52 }
+.tile p{ color:var(--ink-3); font-size:.93rem; line-height:1.52 }
 
 /* ---------------- Privacy ----------------------------------- */
 .privacy{ text-align:center }
-.privacy .act-head{ margin-inline:auto; align-items:center; text-align:center }
+.privacy .act-head, .about .act-head{ margin-inline:auto; align-items:center; text-align:center }
 /* Centred head — a tear line running off to one side only would read as a
    mistake, so this chapter is the stub alone. */
-.privacy .chapter::after{ display:none }
-.privacy-grid{ display:grid; gap:var(--gap); grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); margin-top:3rem; text-align:left }
+.privacy .chapter::after, .about .chapter::after{ display:none }
+.privacy-grid{ display:grid; gap:var(--gap); grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); margin-top:2.75rem; text-align:left }
+.privacy .fineprint{ margin-inline:auto }
 
-/* ---------------- Pricing ----------------------------------- */
-/* The notch sits at a fixed distance from the top so both stubs tear on the
-   same line, whatever length the plan's feature list runs to. */
-.plans{ display:grid; gap:var(--gap); grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); margin-top:3rem; align-items:start }
-.plan{ --r:26px; --tear:186px; padding:0; overflow:hidden }
-.plan-head{ padding:1.7rem 1.6rem 1.5rem; min-height:186px; display:flex; flex-direction:column; justify-content:flex-end; gap:.35rem }
-.plan-name{ font-family:var(--f-display); font-weight:800; font-size:1.35rem; letter-spacing:-.02em }
-.plan-price{ font-family:var(--f-stub); font-weight:700; font-size:2.15rem; letter-spacing:-.04em; line-height:1.1; font-variant-numeric:tabular-nums }
-.plan-price span{ font-size:.85rem; font-weight:400; letter-spacing:.04em; color:var(--dim) }
-.plan-sub{ color:var(--haze); font-size:.9rem }
-.plan-body{ padding:1.5rem 1.6rem 1.8rem; display:flex; flex-direction:column; gap:1.25rem }
-.plan.pro .plan-price{ background:linear-gradient(100deg,var(--amber),var(--rose)); -webkit-background-clip:text; background-clip:text; color:transparent }
-.plan.pro{ box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.26),
-    inset 0 0 0 1px rgba(242,179,64,.16),
-    0 30px 70px -30px rgba(242,179,64,.35),
-    0 26px 64px -30px rgba(0,0,0,.9) }
+/* ---------------- Pricing -----------------------------------
+   The tickets are masked to punch their notches, and a mask clips a
+   box-shadow along with everything else. So the edge and the lift come from
+   a drop-shadow on the grid instead, which follows the cut-out shape — the
+   notches included. The notch sits at a fixed distance from the top so both
+   stubs tear on the same line, whatever length the feature lists run to. */
+.plans{
+  display:grid; gap:var(--gap); grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); margin-top:2.75rem; align-items:start;
+  filter:var(--ticket-filter);
+}
+.plan{ --tear:186px; position:relative; border-radius:24px; overflow:hidden; background:var(--surface) }
+.plan-head{ padding:1.6rem 1.5rem 1.4rem; min-height:186px; display:flex; flex-direction:column; justify-content:flex-end; gap:.35rem }
+.plan-name{ font-family:var(--f-display); font-weight:800; font-size:1.3rem; letter-spacing:-.02em; color:var(--ink) }
+.plan-price{ font-family:var(--f-stub); font-weight:700; font-size:2.1rem; letter-spacing:-.04em; line-height:1.1; font-variant-numeric:tabular-nums; color:var(--ink) }
+.plan-price span{ font-size:.85rem; font-weight:400; letter-spacing:.04em; color:var(--ink-3) }
+.plan-sub{ color:var(--ink-3); font-size:.9rem }
+.plan-body{ padding:1.4rem 1.5rem 1.7rem; display:flex; flex-direction:column; gap:1.2rem }
+.plan.pro{ background:var(--pro-bg) }
+.plan.pro .plan-price{ background:var(--pro-price); -webkit-background-clip:text; background-clip:text; color:transparent }
 .plan-tag{
   align-self:flex-start; margin-bottom:auto;
-  font-family:var(--f-stub); font-size:.6rem; letter-spacing:.18em; text-transform:uppercase;
-  padding:.32rem .7rem; border-radius:999px; color:#241703;
-  background:linear-gradient(100deg,var(--amber),#FFD98A);
+  font-family:var(--f-stub); font-size:.6rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase;
+  padding:.34rem .72rem; border-radius:999px; color:#3A2600;
+  background:linear-gradient(100deg, var(--amber), #FFD98A);
 }
-.fineprint{ margin-top:1.6rem; color:var(--dim); font-size:.82rem; max-width:62ch }
+.fineprint{ margin-top:1.5rem; color:var(--ink-3); font-size:.82rem; max-width:62ch }
+.fineprint a{ color:var(--violet-ink); text-underline-offset:2px }
+
+/* ---------------- Questions ---------------------------------
+   What a stranger from an ad asks before tapping the button. Plain <details>:
+   it opens without a script and with the keyboard, and search engines read
+   every answer. One card with a row per question, like a grouped list in iOS;
+   the plus in the glass disc turns into a cross while a row is open. */
+.questions .act-head{ margin-inline:auto; align-items:center; text-align:center }
+.questions .chapter::after{ display:none }
+.faq{
+  max-width:46rem; margin:2.75rem auto 0;
+  border-radius:22px; background:var(--surface);
+  box-shadow:0 0 0 1px var(--line), var(--shadow);
+}
+.faq-item + .faq-item{ border-top:1px solid var(--line) }
+.faq-item summary{
+  list-style:none; cursor:pointer;
+  display:flex; align-items:center; justify-content:space-between; gap:1rem;
+  padding:1.15rem 1.25rem 1.15rem 1.4rem;
+  font-family:var(--f-display); font-weight:700; font-size:1.06rem; letter-spacing:-.012em; line-height:1.3; color:var(--ink);
+}
+.faq-item summary::-webkit-details-marker{ display:none }
+.faq-item summary::after{
+  content:""; flex:none; width:2rem; height:2rem; border-radius:50%;
+  background:
+    linear-gradient(var(--violet-ink), var(--violet-ink)) center / .78rem 2px no-repeat,
+    linear-gradient(var(--violet-ink), var(--violet-ink)) center / 2px .78rem no-repeat,
+    var(--glass-body);
+  box-shadow:var(--glass-rim), var(--glass-edge);
+  transition:transform .35s cubic-bezier(.19,.85,.24,1);
+}
+.faq-item[open] summary::after{ transform:rotate(45deg) }
+.faq-a{ padding:0 1.4rem 1.35rem; max-width:62ch }
+.faq-a p{ color:var(--ink-3); font-size:.97rem; line-height:1.6 }
+@media (prefers-reduced-motion: no-preference){
+  .faq-item[open] .faq-a{ animation:faq-in .4s cubic-bezier(.19,.85,.24,1) }
+}
+@keyframes faq-in{ from{ opacity:0; transform:translateY(-6px) } to{ opacity:1; transform:none } }
+@media (max-width:600px){
+  .faq{ margin-top:2.25rem }
+  .faq-item summary{ padding:1.05rem 1rem 1.05rem 1.15rem; font-size:1rem }
+  .faq-a{ padding:0 1.15rem 1.2rem }
+}
 
 /* ---------------- Closer + footer --------------------------- */
-.closer{ text-align:center; padding-block:clamp(5rem,10vw,9rem) }
-.closer h2{ font-size:clamp(2.4rem,1.4rem + 4.4vw,5rem); font-weight:900; font-variation-settings:"wdth" 118; letter-spacing:-.045em }
-.closer .lede{ margin:1.4rem auto 0 }
-.closer .hero-cta{ margin-top:2rem }
+.closer{ padding-block:clamp(3rem, 7vw, 6rem) }
+.closer-panel{ text-align:center; padding:clamp(3.5rem, 9vw, 6.5rem) clamp(1.25rem, 5vw, 4rem) }
+.closer h2{ font-size:clamp(2.3rem, 1.4rem + 4vw, 4.4rem); font-weight:790; font-variation-settings:"wdth" 104; letter-spacing:-.042em }
+.closer .lede{ margin:1.2rem auto 0 }
+.closer .hero-cta{ margin-top:1.9rem }
 
-footer{ padding-block:2.6rem 3.5rem; color:var(--dim); font-size:.86rem }
+footer{ padding-block:2.4rem 3.2rem; color:var(--ink-3); font-size:.86rem }
 .foot{ display:flex; flex-wrap:wrap; gap:1rem 2rem; align-items:center; justify-content:space-between }
+.foot-brand{ display:flex; align-items:center; gap:.7rem }
+.foot-brand .mark{ width:26px; height:26px; border-radius:7px }
 .foot-links{ display:flex; flex-wrap:wrap; gap:1.4rem }
-.foot a{ color:var(--haze); text-decoration:none }
-.foot a:hover{ color:var(--paper); text-decoration:underline; text-underline-offset:3px }
+.foot a{ color:var(--ink-3); text-decoration:none }
+.foot a:hover{ color:var(--ink); text-decoration:underline; text-underline-offset:3px }
 .foot .mono{ font-size:.72rem; letter-spacing:.1em; text-transform:uppercase }
 
 /* ---------------- Reveal ------------------------------------ */
-.rise{ opacity:0; transform:translateY(22px); transition:opacity .7s cubic-bezier(.2,.7,.3,1), transform .7s cubic-bezier(.2,.7,.3,1) }
+/* The stagger arrives from the script as --d and delays only the entrance: a
+   card's hover lift (translate, box-shadow) has to answer at once. */
+.rise{
+  opacity:0; transform:translateY(22px);
+  transition:opacity .7s cubic-bezier(.2,.7,.3,1), transform .7s cubic-bezier(.2,.7,.3,1),
+             translate .4s cubic-bezier(.2,.8,.2,1), box-shadow .4s cubic-bezier(.2,.8,.2,1);
+  transition-delay:var(--d, 0ms), var(--d, 0ms), 0ms, 0ms;
+}
 .rise.in{ opacity:1; transform:none }
 @media (prefers-reduced-motion: reduce){ .rise{ opacity:1; transform:none; transition:none } }
 
@@ -553,11 +876,234 @@ footer{ padding-block:2.6rem 3.5rem; color:var(--dim); font-size:.86rem }
 }
 .rise.in .w > span{ transform:none }
 
+/* ---------------- Marquee -----------------------------------
+   A ticket strip between the hero and the rest: the features in the ticket
+   type, running slowly past, with the icon's gradient as the star between
+   them. The run is written twice in the markup and each item carries its own
+   trailing space, so sliding by exactly half loops without a seam. */
+.marquee{
+  overflow:hidden; padding-block:1.05rem;
+  background:
+    repeating-linear-gradient(90deg, var(--perf) 0 3px, transparent 3px 10px) top / 100% 1px no-repeat,
+    repeating-linear-gradient(90deg, var(--perf) 0 3px, transparent 3px 10px) bottom / 100% 1px no-repeat,
+    var(--bg);
+  -webkit-mask-image:linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+          mask-image:linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+.marquee-track{ display:flex; align-items:center; width:max-content }
+.marquee-track span{
+  margin-inline-end:1.5rem; white-space:nowrap;
+  font-family:var(--f-stub); font-size:.76rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--ink-2);
+}
+.marquee-track i{
+  flex:none; width:.72rem; height:.72rem; margin-inline-end:1.5rem;
+  background:var(--brand-text);
+  clip-path:polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
+}
+@media (max-width:600px){
+  .marquee{ padding-block:.9rem }
+  .marquee-track span{ font-size:.7rem; margin-inline-end:1.2rem }
+  .marquee-track i{ width:.62rem; height:.62rem; margin-inline-end:1.2rem }
+}
+
+/* ---------------- Cards under the pointer -------------------
+   On a desktop a card lifts when you point at it, and a soft violet light
+   follows the pointer inside it (the script feeds --mx/--my). The light sits
+   under the text: the card is its own stacking context, the light at -1. */
+@media (hover:hover) and (pointer:fine){
+  .card{ isolation:isolate }
+  .card::before{
+    content:""; position:absolute; inset:0; z-index:-1; border-radius:inherit; pointer-events:none;
+    background:radial-gradient(380px circle at var(--mx, 50%) var(--my, 0%), rgba(158,89,242,.11), transparent 62%);
+    opacity:0; transition:opacity .35s ease;
+  }
+  .card:hover::before{ opacity:1 }
+  .card:hover{ translate:0 -4px; box-shadow:var(--card-hover-shadow) }
+}
+
+/* ============================================================
+   Motion
+   All of it sits on top of a page that already works without it, and none
+   of it runs under prefers-reduced-motion. The scroll-linked part uses CSS
+   scroll timelines, which the browser drives by itself (Safari 26, Chrome
+   115; the app needs iOS 26 anyway); where they're missing it simply doesn't
+   run and the plain reveal does the job. Only transform and opacity move, so
+   nothing repaints while the page scrolls.
+   ============================================================ */
+:root{
+  --ease-out:cubic-bezier(.19,.85,.24,1);
+  --ease-spring:cubic-bezier(.34,1.56,.64,1);
+}
+
+@keyframes up-in{ from{ opacity:0; transform:translateY(18px) } to{ opacity:1; transform:none } }
+/* 130%, not 100%: the line-height is under 1, so tall letters overhang their
+   box and would peek out of the mask's bottom padding at the start */
+@keyframes line-in{ from{ transform:translateY(130%) } to{ transform:none } }
+@keyframes drop-in{ from{ opacity:0; transform:translateY(-16px) } to{ opacity:1; transform:none } }
+@keyframes stage-in{ from{ opacity:0; transform:translateY(90px) scale(.95) } to{ opacity:1; transform:none } }
+@keyframes side-in-l{ from{ opacity:0; transform:translate(46%, 36px) scale(.9) rotate(5deg) } to{ opacity:1; transform:none } }
+@keyframes side-in-r{ from{ opacity:0; transform:translate(-46%, 36px) scale(.9) rotate(-5deg) } to{ opacity:1; transform:none } }
+@keyframes sheen{ from{ background-position:130% 0, 0 0 } to{ background-position:-30% 0, 0 0 } }
+@keyframes shine{ from{ transform:translateX(-110%) } to{ transform:translateX(110%) } }
+@keyframes marquee{ to{ transform:translateX(-50%) } }
+
+@media (prefers-reduced-motion: no-preference){
+  /* The first two seconds: the hero assembles itself. The headline's lines
+     rise out of their masks, the rest follows on a short stagger, the phones
+     come up last with the side pair fanning out from behind the lead, and a
+     stage light sweeps once across "remembered.". The App Store button is
+     readable within about a second. */
+  .nav-wrap{ animation:drop-in .8s var(--ease-out) both }
+  .hero h1 .ln > span{ animation:line-in 1s var(--ease-out) .08s both }
+  .hero h1 em.ln > span{ animation:line-in 1s var(--ease-out) .2s both, sheen 1.6s cubic-bezier(.4,0,.2,1) 1.2s both }
+  .hero-id{ animation:up-in .8s var(--ease-out) .4s both }
+  .hero .lede{ animation:up-in .8s var(--ease-out) .5s both }
+  .hero .hero-cta{ animation:up-in .8s var(--ease-out) .6s both }
+  .hero-stage .lead{ animation:stage-in 1.2s var(--ease-out) .45s both }
+  .hero-stage .side:first-child{ animation:side-in-l 1.3s var(--ease-out) .8s both }
+  .hero-stage .side:last-child{ animation:side-in-r 1.3s var(--ease-out) .8s both }
+  /* backwards, not both: once done it must hand the light back to :hover */
+  .nav-cta::after{ animation:shine 1.1s cubic-bezier(.4,0,.2,1) 2.2s backwards }
+
+  /* The strip is the one thing that never stops. Nothing carrying a soft
+     gradient moves on its own (see .panel for why). */
+  .marquee-track{ animation:marquee 50s linear infinite }
+
+  /* Icons pop in on a spring once their card has arrived (--d is the
+     card's own stagger, so the pop never lands while the card is invisible) */
+  .perk .perk-ico, .mode .mode-dot{
+    opacity:0; transform:scale(.4) rotate(-14deg);
+    transition:transform .8s var(--ease-spring), opacity .35s ease;
+    transition-delay:calc(var(--d, 0ms) + .2s);
+  }
+  .perk.in .perk-ico, .mode.in .mode-dot{ opacity:1; transform:none }
+
+  /* Lists read in order: each point follows the one before */
+  .steps li, .ticks li{
+    opacity:0; transform:translateY(10px);
+    transition:opacity .5s ease, transform .5s var(--ease-out);
+  }
+  .rise.in .steps li, .rise.in .ticks li{ opacity:1; transform:none }
+  .rise.in :is(.steps, .ticks) li:nth-child(1){ transition-delay:calc(var(--d, 0ms) + .15s) }
+  .rise.in :is(.steps, .ticks) li:nth-child(2){ transition-delay:calc(var(--d, 0ms) + .24s) }
+  .rise.in :is(.steps, .ticks) li:nth-child(3){ transition-delay:calc(var(--d, 0ms) + .33s) }
+  .rise.in :is(.steps, .ticks) li:nth-child(4){ transition-delay:calc(var(--d, 0ms) + .42s) }
+  .rise.in :is(.steps, .ticks) li:nth-child(5){ transition-delay:calc(var(--d, 0ms) + .51s) }
+
+  /* The pricing tickets tear along their perforation as they arrive, and a
+     gold glint crosses the Premium one */
+  .plan .perf{
+    background-repeat:no-repeat; background-size:0 100%;
+    transition:background-size 1.1s cubic-bezier(.19,.72,.24,1) calc(var(--d, 0ms) + .35s);
+  }
+  .plan.in .perf{ background-size:100% 100% }
+  .plan.pro::after{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:linear-gradient(105deg, transparent 38%, rgba(255,205,120,.55) 50%, transparent 62%);
+    transform:translateX(-110%);
+  }
+  .plan.pro.in::after{ transform:translateX(110%); transition:transform 1.5s cubic-bezier(.4,0,.2,1) calc(var(--d, 0ms) + .7s) }
+
+  @media (hover:hover){ .marquee:hover .marquee-track{ animation-play-state:paused } }
+}
+
+/* Scroll-linked: the phones move with the page */
+@supports (animation-timeline: view()){
+  @media (prefers-reduced-motion: no-preference){
+    /* Hero: as it scrolls away the side phones part and lift and the lead
+       settles back. A little depth, nothing more. */
+    .hero-stage .phone{ animation:linear both; animation-timeline:scroll(root); animation-range:0 90vh }
+    .hero-stage .lead .phone{ animation-name:lead-drift }
+    .hero-stage .side:first-child .phone{ animation-name:side-drift-l }
+    .hero-stage .side:last-child .phone{ animation-name:side-drift-r }
+
+    /* Feature sections: each phone rises and straightens as it's scrolled
+       into view, leaning in from the side its text is on. The scroll does
+       the entrance here, so the plain reveal steps aside. */
+    .split-art.rise{ opacity:1; transform:none; transition:none }
+    .split-art .phone-wrap, .showcase .phone-wrap{ view-timeline:--phone block }
+    .split-art .phone, .showcase .phone{
+      animation:phone-rise linear both;
+      animation-timeline:--phone; animation-range:entry 5% cover 45%;
+    }
+    .split.flip .phone, .showcase figure:nth-child(2) .phone{ animation-name:phone-rise-flip }
+    .phone-pair .phone-wrap:first-child .phone{ animation-name:pair-l }
+    .phone-pair .phone-wrap:last-child .phone{ animation-name:pair-r }
+    /* The glow behind stays put and the phone rises into it: animating the
+       glow would band it (see .panel) */
+
+    /* The nav is see-through over the hero and settles into solid white glass
+       over the first scroll */
+    .nav{ animation:nav-settle linear both; animation-timeline:scroll(root); animation-range:0 160px }
+  }
+}
+@keyframes lead-drift{ to{ transform:translateY(-26px) scale(.97) } }
+@keyframes side-drift-l{ to{ transform:translate(-26px, -64px) rotate(-3deg) } }
+@keyframes side-drift-r{ to{ transform:translate(26px, -64px) rotate(3deg) } }
+@keyframes phone-rise{ from{ opacity:.3; transform:translateY(80px) rotate(-5deg) scale(.94) } to{ opacity:1; transform:none } }
+@keyframes phone-rise-flip{ from{ opacity:.3; transform:translateY(80px) rotate(5deg) scale(.94) } to{ opacity:1; transform:none } }
+@keyframes pair-l{ from{ opacity:.3; transform:translate(28px, 60px) rotate(-6deg) } to{ opacity:1; transform:none } }
+@keyframes pair-r{ from{ opacity:.3; transform:translate(-28px, 110px) rotate(6deg) } to{ opacity:1; transform:none } }
+@keyframes nav-settle{
+  /* var() in both frames, so the same animation serves both themes; the shadow
+     lists match in length or they won't interpolate */
+  from{ background:var(--nav-bg-top); box-shadow:var(--nav-rim), 0 0 0 1px var(--nav-edge-top), 0 10px 30px -14px transparent }
+  to{ background:var(--nav-bg); box-shadow:var(--nav-rim), 0 0 0 1px var(--line), 0 12px 32px -14px var(--nav-lift) }
+}
+
 /* ---------------- Small screens ----------------------------- */
 @media (max-width:820px){
-  :root{ --shell:min(1180px, 100% - 1.75rem) }
+  :root{ --shell:min(1120px, 100% - 2.5rem) }
   .nav-links{ display:none }
 }
+
+/* A phone is where the Instagram visitors are, so this is the layout that
+   has to be quickest to the point: one decisive button up top, and the long
+   lists folded into compact rows so pricing is a short scroll away. */
+@media (max-width:600px){
+  section{ padding-block:3.75rem }
+  .hero-cta .btn.ghost{ display:none }
+  /* Both panels reach closer to the screen's edge than the text does, so the
+     headline keeps its full width inside the hero's */
+  .panel{ margin-inline:-10px }
+
+  .perks{ margin-top:2.25rem; gap:1.6rem }
+  .perk-ico{ width:2.5rem; height:2.5rem; border-radius:13px }
+  .perk-ico svg{ width:1.2rem; height:1.2rem }
+
+  .modes{ margin-top:2.25rem }
+  .mode{ padding:1.3rem 1.2rem 1.35rem; gap:.5rem }
+  .mode-dot{ width:2.2rem; height:2.2rem; border-radius:11px; margin-bottom:.3rem }
+
+  /* The two showcase screens sit beside their captions instead of above
+     them — half the height, and the caption still has room to breathe. */
+  .showcase{ gap:2.25rem; margin-top:2.5rem; justify-items:stretch }
+  .showcase figure{ flex-direction:row; align-items:center; gap:1.15rem; max-width:none }
+  .showcase figure:nth-child(2){ flex-direction:row-reverse }
+  .showcase .phone-wrap{ --pw:min(150px, 40vw) }
+  .showcase figcaption{ margin:0; text-align:left }
+
+  /* Feature and privacy cards become one grouped list, the way iOS lays out
+     Settings: icon beside the text, hairlines between rows. */
+  .tiles, .privacy-grid{
+    gap:0; margin-top:2.25rem; border-radius:20px; overflow:hidden;
+    background:var(--surface); box-shadow:0 0 0 1px var(--line), var(--shadow);
+  }
+  .tiles .tile, .privacy-grid .tile{
+    display:grid; grid-template-columns:auto 1fr; column-gap:.9rem; row-gap:.2rem; align-items:start;
+    padding:1.05rem 1.1rem 1.1rem; border-radius:0; box-shadow:none; background:none;
+  }
+  .tiles .tile + .tile, .privacy-grid .tile + .tile{ border-top:1px solid var(--line) }
+  .tiles .tile-ico, .privacy-grid .tile-ico{ grid-row:span 2; width:2rem; height:2rem; border-radius:10px; margin:0 }
+  .tiles .tile-ico svg, .privacy-grid .tile-ico svg{ width:1rem; height:1rem }
+  .tile p{ font-size:.9rem }
+  /* rows only fade in: sliding up inside a card they'd overlap the row above */
+  .tiles .tile.rise, .privacy-grid .tile.rise{ transform:none }
+
+  .plans{ margin-top:2.25rem }
+  .closer{ padding-block:1rem 3rem }
+}
+
 @media (max-width:400px){
   .btn.lg{ padding:.85rem 1.25rem; font-size:.95rem }
   /* Brand and App Store button together only just clear 320px — buy slack */
@@ -574,26 +1120,23 @@ footer{ padding-block:2.6rem 3.5rem; color:var(--dim); font-size:.86rem }
      recolouring or rebuilding it. -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="appstore-badge" viewBox="0 0 119.66407 40"><path d="M110.13477,0H9.53468c-.3667,0-.729,0-1.09473.002-.30615.002-.60986.00781-.91895.0127A13.21476,13.21476,0,0,0,5.5171.19141a6.66509,6.66509,0,0,0-1.90088.627A6.43779,6.43779,0,0,0,1.99757,1.99707,6.25844,6.25844,0,0,0,.81935,3.61816a6.60119,6.60119,0,0,0-.625,1.90332,12.993,12.993,0,0,0-.1792,2.002C.00587,7.83008.00489,8.1377,0,8.44434V31.5586c.00489.3105.00587.6113.01515.9219a12.99232,12.99232,0,0,0,.1792,2.0019,6.58756,6.58756,0,0,0,.625,1.9043A6.20778,6.20778,0,0,0,1.99757,38.001a6.27445,6.27445,0,0,0,1.61865,1.1787,6.70082,6.70082,0,0,0,1.90088.6308,13.45514,13.45514,0,0,0,2.0039.1768c.30909.0068.6128.0107.91895.0107C8.80567,40,9.168,40,9.53468,40H110.13477c.3594,0,.7246,0,1.084-.002.3047,0,.6172-.0039.9219-.0107a13.279,13.279,0,0,0,2-.1768,6.80432,6.80432,0,0,0,1.9082-.6308,6.27742,6.27742,0,0,0,1.6172-1.1787,6.39482,6.39482,0,0,0,1.1816-1.6143,6.60413,6.60413,0,0,0,.6191-1.9043,13.50643,13.50643,0,0,0,.1856-2.0019c.0039-.3106.0039-.6114.0039-.9219.0078-.3633.0078-.7246.0078-1.0938V9.53613c0-.36621,0-.72949-.0078-1.09179,0-.30664,0-.61426-.0039-.9209a13.5071,13.5071,0,0,0-.1856-2.002,6.6177,6.6177,0,0,0-.6191-1.90332,6.46619,6.46619,0,0,0-2.7988-2.7998,6.76754,6.76754,0,0,0-1.9082-.627,13.04394,13.04394,0,0,0-2-.17676c-.3047-.00488-.6172-.01074-.9219-.01269-.3594-.002-.7246-.002-1.084-.002Z" style="fill:#a6a6a6"/><path d="M8.44483,39.125c-.30468,0-.602-.0039-.90429-.0107a12.68714,12.68714,0,0,1-1.86914-.1631,5.88381,5.88381,0,0,1-1.65674-.5479,5.40573,5.40573,0,0,1-1.397-1.0166,5.32082,5.32082,0,0,1-1.02051-1.3965,5.72186,5.72186,0,0,1-.543-1.6572,12.41351,12.41351,0,0,1-.1665-1.875c-.00634-.2109-.01464-.9131-.01464-.9131V8.44434S.88185,7.75293.8877,7.5498a12.37039,12.37039,0,0,1,.16553-1.87207,5.7555,5.7555,0,0,1,.54346-1.6621A5.37349,5.37349,0,0,1,2.61183,2.61768,5.56543,5.56543,0,0,1,4.01417,1.59521a5.82309,5.82309,0,0,1,1.65332-.54394A12.58589,12.58589,0,0,1,7.543.88721L8.44532.875H111.21387l.9131.0127a12.38493,12.38493,0,0,1,1.8584.16259,5.93833,5.93833,0,0,1,1.6709.54785,5.59374,5.59374,0,0,1,2.415,2.41993,5.76267,5.76267,0,0,1,.5352,1.64892,12.995,12.995,0,0,1,.1738,1.88721c.0029.2832.0029.5874.0029.89014.0079.375.0079.73193.0079,1.09179V30.4648c0,.3633,0,.7178-.0079,1.0752,0,.3252,0,.6231-.0039.9297a12.73126,12.73126,0,0,1-.1709,1.8535,5.739,5.739,0,0,1-.54,1.67,5.48029,5.48029,0,0,1-1.0156,1.3857,5.4129,5.4129,0,0,1-1.3994,1.0225,5.86168,5.86168,0,0,1-1.668.5498,12.54218,12.54218,0,0,1-1.8692.1631c-.2929.0068-.5996.0107-.8974.0107l-1.084.002Z"/><path d="M24.76888,20.30068a4.94881,4.94881,0,0,1,2.35656-4.15206,5.06566,5.06566,0,0,0-3.99116-2.15768c-1.67924-.17626-3.30719,1.00483-4.1629,1.00483-.87227,0-2.18977-.98733-3.6085-.95814a5.31529,5.31529,0,0,0-4.47292,2.72787c-1.934,3.34842-.49141,8.26947,1.3612,10.97608.9269,1.32535,2.01018,2.8058,3.42763,2.7533,1.38706-.05753,1.9051-.88448,3.5794-.88448,1.65876,0,2.14479.88448,3.591.8511,1.48838-.02416,2.42613-1.33124,3.32051-2.66914a10.962,10.962,0,0,0,1.51842-3.09251A4.78205,4.78205,0,0,1,24.76888,20.30068Z" style="fill:#fff"/><path d="M22.03725,12.21089a4.87248,4.87248,0,0,0,1.11452-3.49062,4.95746,4.95746,0,0,0-3.20758,1.65961,4.63634,4.63634,0,0,0-1.14371,3.36139A4.09905,4.09905,0,0,0,22.03725,12.21089Z" style="fill:#fff"/><path d="M42.30227,27.13965h-4.7334l-1.13672,3.35645H34.42727l4.4834-12.418h2.083l4.4834,12.418H43.438ZM38.0591,25.59082h3.752l-1.84961-5.44727h-.05176Z" style="fill:#fff"/><path d="M55.15969,25.96973c0,2.81348-1.50586,4.62109-3.77832,4.62109a3.0693,3.0693,0,0,1-2.84863-1.584h-.043v4.48438h-1.8584V21.44238H48.4302v1.50586h.03418a3.21162,3.21162,0,0,1,2.88281-1.60059C53.645,21.34766,55.15969,23.16406,55.15969,25.96973Zm-1.91016,0c0-1.833-.94727-3.03809-2.39258-3.03809-1.41992,0-2.375,1.23047-2.375,3.03809,0,1.82422.95508,3.0459,2.375,3.0459C52.30227,29.01563,53.24953,27.81934,53.24953,25.96973Z" style="fill:#fff"/><path d="M65.12453,25.96973c0,2.81348-1.50586,4.62109-3.77832,4.62109a3.0693,3.0693,0,0,1-2.84863-1.584h-.043v4.48438h-1.8584V21.44238H58.395v1.50586h.03418A3.21162,3.21162,0,0,1,61.312,21.34766C63.60988,21.34766,65.12453,23.16406,65.12453,25.96973Zm-1.91016,0c0-1.833-.94727-3.03809-2.39258-3.03809-1.41992,0-2.375,1.23047-2.375,3.03809,0,1.82422.95508,3.0459,2.375,3.0459C62.26711,29.01563,63.21438,27.81934,63.21438,25.96973Z" style="fill:#fff"/><path d="M71.71047,27.03613c.1377,1.23145,1.334,2.04,2.96875,2.04,1.56641,0,2.69336-.80859,2.69336-1.91895,0-.96387-.67969-1.541-2.28906-1.93652l-1.60937-.3877c-2.28027-.55078-3.33887-1.61719-3.33887-3.34766,0-2.14258,1.86719-3.61426,4.51855-3.61426,2.624,0,4.42285,1.47168,4.4834,3.61426h-1.876c-.1123-1.23926-1.13672-1.9873-2.63379-1.9873s-2.52148.75684-2.52148,1.8584c0,.87793.6543,1.39453,2.25488,1.79l1.36816.33594c2.54785.60254,3.60645,1.626,3.60645,3.44238,0,2.32324-1.85059,3.77832-4.79395,3.77832-2.75391,0-4.61328-1.4209-4.7334-3.667Z" style="fill:#fff"/><path d="M83.34621,19.2998v2.14258h1.72168v1.47168H83.34621v4.99121c0,.77539.34473,1.13672,1.10156,1.13672a5.80752,5.80752,0,0,0,.61133-.043v1.46289a5.10351,5.10351,0,0,1-1.03223.08594c-1.833,0-2.54785-.68848-2.54785-2.44434V22.91406H80.16262V21.44238H81.479V19.2998Z" style="fill:#fff"/><path d="M86.065,25.96973c0-2.84863,1.67773-4.63867,4.29395-4.63867,2.625,0,4.29492,1.79,4.29492,4.63867,0,2.85645-1.66113,4.63867-4.29492,4.63867C87.72609,30.6084,86.065,28.82617,86.065,25.96973Zm6.69531,0c0-1.9541-.89551-3.10742-2.40137-3.10742s-2.40039,1.16211-2.40039,3.10742c0,1.96191.89453,3.10645,2.40039,3.10645S92.76027,27.93164,92.76027,25.96973Z" style="fill:#fff"/><path d="M96.18606,21.44238h1.77246v1.541h.043a2.1594,2.1594,0,0,1,2.17773-1.63574,2.86616,2.86616,0,0,1,.63672.06934v1.73828a2.59794,2.59794,0,0,0-.835-.1123,1.87264,1.87264,0,0,0-1.93652,2.083v5.37012h-1.8584Z" style="fill:#fff"/><path d="M109.3843,27.83691c-.25,1.64355-1.85059,2.77148-3.89844,2.77148-2.63379,0-4.26855-1.76465-4.26855-4.5957,0-2.83984,1.64355-4.68164,4.19043-4.68164,2.50488,0,4.08008,1.7207,4.08008,4.46582v.63672h-6.39453v.1123a2.358,2.358,0,0,0,2.43555,2.56445,2.04834,2.04834,0,0,0,2.09082-1.27344Zm-6.28223-2.70215h4.52637a2.1773,2.1773,0,0,0-2.2207-2.29785A2.292,2.292,0,0,0,103.10207,25.13477Z" style="fill:#fff"/><path d="M37.82619,8.731a2.63964,2.63964,0,0,1,2.80762,2.96484c0,1.90625-1.03027,3.002-2.80762,3.002H35.67092V8.731Zm-1.22852,5.123h1.125a1.87588,1.87588,0,0,0,1.96777-2.146,1.881,1.881,0,0,0-1.96777-2.13379h-1.125Z" style="fill:#fff"/><path d="M41.68068,12.44434a2.13323,2.13323,0,1,1,4.24707,0,2.13358,2.13358,0,1,1-4.24707,0Zm3.333,0c0-.97607-.43848-1.54687-1.208-1.54687-.77246,0-1.207.5708-1.207,1.54688,0,.98389.43457,1.55029,1.207,1.55029C44.57522,13.99463,45.01369,13.42432,45.01369,12.44434Z" style="fill:#fff"/><path d="M51.57326,14.69775h-.92187l-.93066-3.31641h-.07031l-.92676,3.31641h-.91309l-1.24121-4.50293h.90137l.80664,3.436h.06641l.92578-3.436h.85254l.92578,3.436h.07031l.80273-3.436h.88867Z" style="fill:#fff"/><path d="M53.85354,10.19482H54.709v.71533h.06641a1.348,1.348,0,0,1,1.34375-.80225,1.46456,1.46456,0,0,1,1.55859,1.6748v2.915h-.88867V12.00586c0-.72363-.31445-1.0835-.97168-1.0835a1.03294,1.03294,0,0,0-1.0752,1.14111v2.63428h-.88867Z" style="fill:#fff"/><path d="M59.09377,8.437h.88867v6.26074h-.88867Z" style="fill:#fff"/><path d="M61.21779,12.44434a2.13346,2.13346,0,1,1,4.24756,0,2.1338,2.1338,0,1,1-4.24756,0Zm3.333,0c0-.97607-.43848-1.54687-1.208-1.54687-.77246,0-1.207.5708-1.207,1.54688,0,.98389.43457,1.55029,1.207,1.55029C64.11232,13.99463,64.5508,13.42432,64.5508,12.44434Z" style="fill:#fff"/><path d="M66.4009,13.42432c0-.81055.60352-1.27783,1.6748-1.34424l1.21973-.07031v-.38867c0-.47559-.31445-.74414-.92187-.74414-.49609,0-.83984.18213-.93848.50049h-.86035c.09082-.77344.81836-1.26953,1.83984-1.26953,1.12891,0,1.76563.562,1.76563,1.51318v3.07666h-.85547v-.63281h-.07031a1.515,1.515,0,0,1-1.35254.707A1.36026,1.36026,0,0,1,66.4009,13.42432Zm2.89453-.38477v-.37646l-1.09961.07031c-.62012.0415-.90137.25244-.90137.64941,0,.40527.35156.64111.835.64111A1.0615,1.0615,0,0,0,69.29543,13.03955Z" style="fill:#fff"/><path d="M71.34816,12.44434c0-1.42285.73145-2.32422,1.86914-2.32422a1.484,1.484,0,0,1,1.38086.79h.06641V8.437h.88867v6.26074h-.85156v-.71143h-.07031a1.56284,1.56284,0,0,1-1.41406.78564C72.0718,14.772,71.34816,13.87061,71.34816,12.44434Zm.918,0c0,.95508.4502,1.52979,1.20313,1.52979.749,0,1.21191-.583,1.21191-1.52588,0-.93848-.46777-1.52979-1.21191-1.52979C72.72121,10.91846,72.26613,11.49707,72.26613,12.44434Z" style="fill:#fff"/><path d="M79.23,12.44434a2.13323,2.13323,0,1,1,4.24707,0,2.13358,2.13358,0,1,1-4.24707,0Zm3.333,0c0-.97607-.43848-1.54687-1.208-1.54687-.77246,0-1.207.5708-1.207,1.54688,0,.98389.43457,1.55029,1.207,1.55029C82.12453,13.99463,82.563,13.42432,82.563,12.44434Z" style="fill:#fff"/><path d="M84.66945,10.19482h.85547v.71533h.06641a1.348,1.348,0,0,1,1.34375-.80225,1.46456,1.46456,0,0,1,1.55859,1.6748v2.915H87.605V12.00586c0-.72363-.31445-1.0835-.97168-1.0835a1.03294,1.03294,0,0,0-1.0752,1.14111v2.63428h-.88867Z" style="fill:#fff"/><path d="M93.51516,9.07373v1.1416h.97559v.74854h-.97559V13.2793c0,.47168.19434.67822.63672.67822a2.96657,2.96657,0,0,0,.33887-.02051v.74023a2.9155,2.9155,0,0,1-.4834.04541c-.98828,0-1.38184-.34766-1.38184-1.21582v-2.543h-.71484v-.74854h.71484V9.07373Z" style="fill:#fff"/><path d="M95.70461,8.437h.88086v2.48145h.07031a1.3856,1.3856,0,0,1,1.373-.80664,1.48339,1.48339,0,0,1,1.55078,1.67871v2.90723H98.69v-2.688c0-.71924-.335-1.0835-.96289-1.0835a1.05194,1.05194,0,0,0-1.13379,1.1416v2.62988h-.88867Z" style="fill:#fff"/><path d="M104.76125,13.48193a1.828,1.828,0,0,1-1.95117,1.30273A2.04531,2.04531,0,0,1,100.73,12.46045a2.07685,2.07685,0,0,1,2.07617-2.35254c1.25293,0,2.00879.856,2.00879,2.27V12.688h-3.17969v.0498a1.1902,1.1902,0,0,0,1.19922,1.29,1.07934,1.07934,0,0,0,1.07129-.5459Zm-3.126-1.45117h2.27441a1.08647,1.08647,0,0,0-1.1084-1.1665A1.15162,1.15162,0,0,0,101.63527,12.03076Z" style="fill:#fff"/></symbol></svg>
 
-<div class="room" aria-hidden="true">
-  <div class="beam b1"></div>
-  <div class="beam b2"></div>
-  <div class="beam b3"></div>
-  <div class="beam b4"></div>
-</div>
-
 <!-- ============================ NAV ============================ -->
 <div class="nav-wrap">
-  <nav class="nav glass">
+  <nav class="nav">
     <a class="brand" href="#top">
       <span class="mark"></span>
       <b>Gigtick</b>
     </a>
     <div class="nav-links">
-      <a href="#what">How it works</a>
-      <a href="#import">Your photos</a>
+      <a href="#import">How it works</a>
       <a href="#live">Live</a>
+      <a href="#privacy">Privacy</a>
       <a href="#price">Premium</a>
     </div>
+    <button class="theme-toggle" type="button" aria-label="Switch to dark mode">
+      <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>
+      <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58a.996.996 0 0 0-1.41 0 .996.996 0 0 0 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37a.996.996 0 0 0-1.41 0 .996.996 0 0 0 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0a.996.996 0 0 0 0-1.41l-1.06-1.06zm1.06-10.96a.996.996 0 0 0 0-1.41.996.996 0 0 0-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36a.996.996 0 0 0 0-1.41.996.996 0 0 0-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/></svg>
+    </button>
     <a class="btn nav-cta" href="https://apps.apple.com/app/apple-store/id6783332108?pt=129066596&amp;ct=web&amp;mt=8">
       Get Gigtick
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v10.2l3.6-3.6 1.4 1.4-6 6-6-6 1.4-1.4L10 13.2V3zM5 19h14v2H5z"/></svg>
@@ -604,82 +1147,101 @@ footer{ padding-block:2.6rem 3.5rem; color:var(--dim); font-size:.86rem }
 <!-- ============================ HERO =========================== -->
 <header class="hero" id="top">
   <div class="shell">
-    <span class="stub-label">Your concert diary app</span>
-    <!-- The space matters even though <em> is a block and the line breaks
-         anyway: without it the headline extracts as "Every showremembered."
-         to search engines and screen readers. -->
-    <h1>Every show <em>remembered.</em></h1>
+    <div class="hero-panel panel">
+      <!-- The space matters even though both lines are blocks and break anyway:
+           without it the headline extracts as "Every showremembered." to search
+           engines and screen readers. Each .ln is a mask its line rises out of. -->
+      <h1><span class="ln"><span>Every show</span></span> <em class="ln"><span>remembered.</span></em></h1>
 
-    <p class="hero-id">
-      <span class="mark" aria-hidden="true"></span>
-      <span>That's <b>Gigtick</b>, a concert diary for iPhone</span>
-    </p>
+      <p class="hero-id">
+        <span class="mark" aria-hidden="true"></span>
+        <span>That's <b>Gigtick</b>, a concert diary for iPhone</span>
+      </p>
 
-    <p class="lede">It finds the concerts hiding in your camera roll, pulls in the setlist, and keeps them beside the shows you're going to and the ones you still dream about.</p>
+      <p class="lede">It finds the concerts hiding in your camera roll, pulls in the setlist, and keeps them beside the shows you're going to and the ones you still dream about.</p>
 
-    <div class="hero-cta">
-      <a class="badge-link" href="https://apps.apple.com/app/apple-store/id6783332108?pt=129066596&amp;ct=web&amp;mt=8" style="--bw:196px">
-        <svg class="badge" viewBox="0 0 119.66407 40" role="img" aria-label="Download on the App Store"><use href="#appstore-badge"/></svg>
-      </a>
-      <a class="btn lg ghost" href="#what">See how it works</a>
-    </div>
-
-    <div class="hero-stage">
-      <div class="phone-wrap side">
-        <img class="phone" src="screenshots/setlist.webp" width="700" height="1435" alt="A concert's setlist: 35 songs in the order they were played, with buttons to open it on setlist.fm or build an Apple Music playlist.">
+      <div class="hero-cta">
+        <a class="badge-link" href="https://apps.apple.com/app/apple-store/id6783332108?pt=129066596&amp;ct=web&amp;mt=8">
+          <svg class="badge" viewBox="0 0 119.66407 40" role="img" aria-label="Download on the App Store"><use href="#appstore-badge"/></svg>
+        </a>
+        <a class="btn lg ghost" href="#import">See how it works</a>
       </div>
-      <div class="phone-wrap lead">
-        <img class="phone" src="screenshots/home.webp" width="700" height="1435" alt="The Gigtick home screen: a greeting, the next concert coming up, and cards for stats and badges.">
-      </div>
-      <div class="phone-wrap side">
-        <img class="phone" src="screenshots/memories.webp" width="700" height="1435" alt="A concert's gallery: a grid of videos from a Linkin Park show, each with its running time.">
+
+      <div class="hero-stage">
+        <div class="phone-wrap side">
+          <img class="phone" src="screenshots/setlist.webp" width="700" height="1435" alt="A concert's setlist: 35 songs in the order they were played, with buttons to open it on setlist.fm or build an Apple Music playlist.">
+        </div>
+        <div class="phone-wrap lead">
+          <img class="phone" src="screenshots/home.webp" width="700" height="1435" alt="The Gigtick home screen: a greeting, the next concert coming up, and cards for stats and badges.">
+        </div>
+        <div class="phone-wrap side">
+          <img class="phone" src="screenshots/memories.webp" width="700" height="1435" alt="A concert's gallery: a grid of videos from an Amber Frequency show, each with its running time.">
+        </div>
       </div>
     </div>
   </div>
 </header>
 
-<!-- ============================ WHAT ============================ -->
-<section id="what">
+<!-- ============================ MARQUEE ========================= -->
+<!-- Decoration (aria-hidden): every feature it names is told properly below.
+     The run is written twice so the loop has no seam. -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track"><span>Smart Import</span><i></i><span>Setlists</span><i></i><span>Apple Music playlists</span><i></i><span>Live Activities</span><i></i><span>Photos &amp; videos</span><i></i><span>Badges</span><i></i><span>Year in Review</span><i></i><span>Weather at the show</span><i></i><span>Tickets</span><i></i><span>Artist pages</span><i></i><span>Story cards</span><i></i><span>Anniversaries</span><i></i><span>iCloud sync</span><i></i><span>Smart Import</span><i></i><span>Setlists</span><i></i><span>Apple Music playlists</span><i></i><span>Live Activities</span><i></i><span>Photos &amp; videos</span><i></i><span>Badges</span><i></i><span>Year in Review</span><i></i><span>Weather at the show</span><i></i><span>Tickets</span><i></i><span>Artist pages</span><i></i><span>Story cards</span><i></i><span>Anniversaries</span><i></i><span>iCloud sync</span><i></i></div>
+</div>
+
+<!-- ============================ ABOUT =========================== -->
+<!-- The page in one screen, in the plainest words on it. The headline is the
+     brand card of the Instagram carousel, so a visitor from the ad lands on
+     the line they just read. -->
+<section id="about" class="about band">
   <div class="shell">
     <div class="act-head rise">
-      <p class="chapter"><span>Your concerts</span></p>
-      <h2>Three kinds of concert, one shelf.</h2>
-      <p class="lede">Every show in Gigtick is one of these. Move a dream to your calendar the day you finally get a ticket, and it carries its photos, notes and artist along with it.</p>
+      <p class="chapter" data-icon="ticket"><span>What is Gigtick</span></p>
+      <h2>Every concert you've been to. <em>In one place.</em></h2>
+      <p class="lede">Gigtick is a diary for the concerts and festivals you go to, right on your iPhone. The shows you've seen, the ones you have tickets for and the ones you dream about, each with its photos, videos and setlist.</p>
     </div>
 
-    <div class="modes">
-      <article class="mode glass rise" style="--c:var(--rose)">
-        <div class="mode-dot"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg></div>
-        <span class="stub-label">Attended</span>
-        <h3>Shows you were at</h3>
-        <p>Photos, videos, the setlist and the stats all land here — and you pick up badges for the milestones you pass.</p>
-      </article>
-
-      <article class="mode glass rise" style="--c:var(--indigo)">
-        <div class="mode-dot"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2m0 16H5V10h14z"/></svg></div>
-        <span class="stub-label">Upcoming</span>
-        <h3>Shows you're going to</h3>
-        <p>Keep the ticket on the concert, set a reminder, check the weather for the hour the band walks on, then go live on the night.</p>
-      </article>
-
-      <article class="mode glass rise" style="--c:var(--violet)">
-        <div class="mode-dot"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 17.3-6.2 3.7 1.6-7L2 9.2l7.1-.6L12 2l2.9 6.6 7.1.6-5.4 4.8 1.6 7z"/></svg></div>
-        <span class="stub-label">Wishlist</span>
-        <h3>Shows you dream about</h3>
-        <p>The bucket list. When the tickets finally drop, one tap moves the whole thing over to Upcoming.</p>
-      </article>
-    </div>
+    <ul class="perks">
+      <li class="perk rise">
+        <span class="perk-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 9l1.25-2.75L23 5l-2.75-1.25L19 1l-1.25 2.75L15 5l2.75 1.25L19 9zm-7.5.5L9 4 6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L17 12l-5.5-2.5zM19 15l-1.25 2.75L15 19l2.75 1.25L19 23l1.25-2.75L23 19l-2.75-1.25L19 15z"/></svg></span>
+        <h3>It finds your concerts</h3>
+        <p>Gigtick spots past shows in your camera roll by their date and place. You only type who played.</p>
+      </li>
+      <li class="perk rise">
+        <span class="perk-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16V4c0-1.1-.9-2-2-2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2zm-11-4l2.03 2.71L16 11l4 5H8l3-4zM2 6v14c0 1.1.9 2 2 2h14v-2H4V6H2z"/></svg></span>
+        <h3>Photos sorted by the gig</h3>
+        <p>Open a concert and the photos and videos from that night are already waiting. They stay in your Photos library, so they take no extra space.</p>
+      </li>
+      <li class="perk rise">
+        <span class="perk-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6H3v2h12V6zm0 4H3v2h12v-2zM3 16h8v-2H3v2zM17 6v8.18c-.31-.11-.65-.18-1-.18-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3V8h3V6h-5z"/></svg></span>
+        <h3>The setlist from your night</h3>
+        <p>See every song they played on the date you were there, and turn it into an Apple Music playlist.</p>
+      </li>
+      <li class="perk rise">
+        <span class="perk-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg></span>
+        <h3>One tap at the show</h3>
+        <p>Start Instant Track when the lights go down, and the photos and videos you take land in that concert.</p>
+      </li>
+      <li class="perk rise">
+        <span class="perk-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg></span>
+        <h3>Ready for the next one</h3>
+        <p>Keep the ticket with the show, get a reminder before it starts and check the weather for the evening.</p>
+      </li>
+      <li class="perk rise">
+        <span class="perk-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg></span>
+        <h3>Your gig life in numbers</h3>
+        <p>See how many artists, cities and countries you've collected, and earn badges along the way.</p>
+      </li>
+    </ul>
   </div>
 </section>
-
-<hr class="perf shell rise">
 
 <!-- ============================ IMPORT ========================== -->
 <section id="import">
   <div class="shell">
     <div class="split">
       <div class="split-copy rise">
-        <p class="chapter"><span>Smart Import</span></p>
+        <p class="chapter" data-icon="wand"><span>Smart Import</span></p>
         <h2>Your camera roll is already the diary.</h2>
         <p class="lede">You don't remember every show you've been to. Your photos do. Gigtick reads them on your phone and hands you back the nights it's fairly sure were concerts.</p>
 
@@ -716,14 +1278,46 @@ footer{ padding-block:2.6rem 3.5rem; color:var(--dim); font-size:.86rem }
   </div>
 </section>
 
-<hr class="perf shell rise">
+<!-- ============================ WHAT ============================ -->
+<section id="what" class="band">
+  <div class="shell">
+    <div class="act-head rise">
+      <p class="chapter" data-icon="mic"><span>Your concerts</span></p>
+      <h2>Three kinds of concert, one shelf.</h2>
+      <p class="lede">Every show in Gigtick is one of these. Move a dream to your calendar the day you finally get a ticket, and it carries its photos, notes and artist along with it.</p>
+    </div>
+
+    <div class="modes">
+      <article class="mode card rise c-rose">
+        <div class="mode-dot"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg></div>
+        <span class="stub-label">Attended</span>
+        <h3>Shows you were at</h3>
+        <p>Photos, videos, the setlist and the stats all land here — and you pick up badges for the milestones you pass.</p>
+      </article>
+
+      <article class="mode card rise c-indigo">
+        <div class="mode-dot"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2m0 16H5V10h14z"/></svg></div>
+        <span class="stub-label">Upcoming</span>
+        <h3>Shows you're going to</h3>
+        <p>Keep the ticket on the concert, set a reminder, check the weather for the hour the band walks on, then go live on the night.</p>
+      </article>
+
+      <article class="mode card rise c-violet">
+        <div class="mode-dot"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 17.3-6.2 3.7 1.6-7L2 9.2l7.1-.6L12 2l2.9 6.6 7.1.6-5.4 4.8 1.6 7z"/></svg></div>
+        <span class="stub-label">Wishlist</span>
+        <h3>Shows you dream about</h3>
+        <p>The bucket list. When the tickets finally drop, one tap moves the whole thing over to Upcoming.</p>
+      </article>
+    </div>
+  </div>
+</section>
 
 <!-- ============================ MEMORIES ======================== -->
 <section id="memories">
   <div class="shell">
     <div class="split flip">
       <div class="split-copy rise">
-        <p class="chapter"><span>Memories</span></p>
+        <p class="chapter" data-icon="photos"><span>Memories</span></p>
         <h2>The photos were yours already. Now they're filed.</h2>
         <p class="lede">Open a concert and Gigtick has been there first — it offers the photos and videos taken at that place, on that night, and you untick whatever doesn't belong.</p>
 
@@ -740,7 +1334,7 @@ footer{ padding-block:2.6rem 3.5rem; color:var(--dim); font-size:.86rem }
             <img class="phone" loading="lazy" src="screenshots/photos-found.webp" width="700" height="1435" alt="Add memories: photos found automatically for this concert, each ticked and ready to add.">
           </div>
           <div class="phone-wrap">
-            <img class="phone" loading="lazy" src="screenshots/memories.webp" width="700" height="1435" alt="A concert's gallery: a grid of videos from a Linkin Park show with their running times.">
+            <img class="phone" loading="lazy" src="screenshots/memories.webp" width="700" height="1435" alt="A concert's gallery: a grid of videos from an Amber Frequency show with their running times.">
           </div>
         </div>
       </div>
@@ -748,14 +1342,12 @@ footer{ padding-block:2.6rem 3.5rem; color:var(--dim); font-size:.86rem }
   </div>
 </section>
 
-<hr class="perf shell rise">
-
 <!-- ============================ LIVE ============================ -->
-<section id="live">
+<section id="live" class="band">
   <div class="shell">
     <div class="split">
       <div class="split-copy rise">
-        <p class="chapter"><span>Instant Track</span></p>
+        <p class="chapter" data-icon="bolt"><span>Instant Track</span></p>
         <h2>Start it when the lights go down.</h2>
         <p class="lede">One tap before the first song. Gigtick opens a Live Activity on your Lock Screen and in the Dynamic Island, and every photo and video you shoot that night attaches itself to that concert.</p>
 
@@ -777,14 +1369,12 @@ footer{ padding-block:2.6rem 3.5rem; color:var(--dim); font-size:.86rem }
   </div>
 </section>
 
-<hr class="perf shell rise">
-
 <!-- ============================ MUSIC =========================== -->
 <section id="music">
   <div class="shell">
     <div class="split flip">
       <div class="split-copy rise">
-        <p class="chapter"><span>The music</span></p>
+        <p class="chapter" data-icon="note"><span>The music</span></p>
         <h2>Every song they played, in the order they played it.</h2>
         <p class="lede">Gigtick pulls the setlist from setlist.fm and puts it on the concert. Saved a show the moment it ended? Refresh it later and the finished set fills itself in as fans complete it.</p>
 
@@ -804,13 +1394,11 @@ footer{ padding-block:2.6rem 3.5rem; color:var(--dim); font-size:.86rem }
   </div>
 </section>
 
-<hr class="perf shell rise">
-
 <!-- ============================ MORE ============================ -->
-<section id="more">
+<section id="more" class="band">
   <div class="shell">
     <div class="act-head rise">
-      <p class="chapter"><span>The rest of it</span></p>
+      <p class="chapter" data-icon="shapes"><span>The rest of it</span></p>
       <h2>Before the show, and long after.</h2>
       <p class="lede">A concert isn't only the two hours in the room. Gigtick covers the week you spend waiting for it and the years you spend looking back.</p>
     </div>
@@ -838,37 +1426,37 @@ footer{ padding-block:2.6rem 3.5rem; color:var(--dim); font-size:.86rem }
     </div>
 
     <div class="tiles">
-      <article class="tile glass rise" style="--c:var(--amber)">
+      <article class="tile card rise c-amber">
         <div class="tile-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10m0 2c-4.4 0-8 2.2-8 5v3h16v-3c0-2.8-3.6-5-8-5"/></svg></div>
         <h4>Artist pages</h4>
         <p>Their latest setlist, an archive of earlier shows, and the dates they've announced — plus every gig of theirs you've been to.</p>
       </article>
 
-      <article class="tile glass rise" style="--c:var(--rose)">
+      <article class="tile card rise c-rose">
         <div class="tile-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 5H4a2 2 0 0 0-2 2v3a2 2 0 0 1 0 4v3a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-3a2 2 0 0 1 0-4V7a2 2 0 0 0-2-2m-6 2h2v2h-2zm0 4h2v2h-2zm0 4h2v2h-2z"/></svg></div>
         <h4>Your ticket, on the concert</h4>
         <p>Attach the ticket the moment you save the show. It sits with the gig instead of getting lost in a mail thread.</p>
       </article>
 
-      <article class="tile glass rise" style="--c:var(--violet)">
+      <article class="tile card rise c-violet">
         <div class="tile-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 2h-8L4 8v14h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2m-8 2.5V8H6.5zM8 18v-2h8v2zm8-4H8v-2h8z"/></svg></div>
         <h4>Story cards</h4>
         <p>Your year, a concert, a milestone, a badge, your profile or an artist — each gets a card for stories, with one of your own photos behind it.</p>
       </article>
 
-      <article class="tile glass rise" style="--c:var(--indigo)">
+      <article class="tile card rise c-indigo">
         <div class="tile-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2a8 8 0 1 0 4.9 14.3l5.4 5.4 1.4-1.4-5.4-5.4A8 8 0 0 0 10 2m0 2a6 6 0 1 1 0 12 6 6 0 0 1 0-12"/></svg></div>
         <h4>Search the whole shelf</h4>
         <p>Artist, opening act, city, country, venue or tour name — across attended, upcoming and dream concerts at once. Accents optional.</p>
       </article>
 
-      <article class="tile glass rise" style="--c:var(--rose)">
+      <article class="tile card rise c-rose">
         <div class="tile-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.35 10.55 20C5.4 15.36 2 12.28 2 8.5A5.5 5.5 0 0 1 12 5.09 5.5 5.5 0 0 1 22 8.5c0 3.78-3.4 6.86-8.55 11.5z"/></svg></div>
         <h4>Anniversaries</h4>
         <p>A nudge on the anniversary of a night you'd half forgotten, with the photos you took that evening waiting behind it.</p>
       </article>
 
-      <article class="tile glass rise" style="--c:var(--violet)">
+      <article class="tile card rise c-violet">
         <div class="tile-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.8 18a4.3 4.3 0 0 1-.5-8.6 5.7 5.7 0 0 1 11 .8A3.7 3.7 0 0 1 17 18z"/></svg></div>
         <h4>iCloud sync, included</h4>
         <p>Your shows follow you across your own devices through Apple's private CloudKit database. Part of the free app, not something Premium unlocks.</p>
@@ -877,66 +1465,62 @@ footer{ padding-block:2.6rem 3.5rem; color:var(--dim); font-size:.86rem }
   </div>
 </section>
 
-<hr class="perf shell rise">
-
 <!-- ============================ PRIVACY ========================= -->
 <section id="privacy" class="privacy">
   <div class="shell">
     <div class="act-head rise">
-      <p class="chapter"><span>Privacy</span></p>
+      <p class="chapter" data-icon="shield"><span>Privacy</span></p>
       <h2>Your gig history stays yours.</h2>
       <p class="lede">Gigtick has no accounts, no user profiles and no server of ours holding your concerts. It's a diary, and a diary belongs to one person.</p>
     </div>
 
     <div class="privacy-grid">
-      <article class="tile glass rise" style="--c:var(--rose)">
+      <article class="tile card rise c-rose">
         <div class="tile-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5z"/></svg></div>
         <h4>Nothing personal collected</h4>
         <p>No account to make, nothing identifying to hand over. Your concerts live in the app's own storage on your device.</p>
       </article>
 
-      <article class="tile glass rise" style="--c:var(--violet)">
+      <article class="tile card rise c-violet">
         <div class="tile-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H4zm5 13h6v2H9z"/></svg></div>
         <h4>Photos stay in Photos</h4>
         <p>Gigtick keeps a reference to the original asset, never a copy. Smart Import analyses your library on the device — no image is uploaded anywhere.</p>
       </article>
 
-      <article class="tile glass rise" style="--c:var(--indigo)">
+      <article class="tile card rise c-indigo">
         <div class="tile-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.8 18a4.3 4.3 0 0 1-.5-8.6 5.7 5.7 0 0 1 11 .8A3.7 3.7 0 0 1 17 18z"/></svg></div>
         <h4>Sync you can see through</h4>
         <p>Your shows move between your devices in your own private CloudKit database. Apple holds it, we never see it, and it costs nothing.</p>
       </article>
 
-      <article class="tile glass rise" style="--c:var(--amber)">
+      <article class="tile card rise c-amber">
         <div class="tile-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a5 5 0 0 0-5 5v2H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2h-1V7a5 5 0 0 0-5-5m0 2a3 3 0 0 1 3 3v2H9V7a3 3 0 0 1 3-3"/></svg></div>
         <h4>Lookups say nothing about you</h4>
         <p>Setlist and artist searches send only the name you're looking up, through an anonymous proxy — never your identity, your history or your photos.</p>
       </article>
     </div>
 
-    <p class="fineprint" style="margin-inline:auto">The full detail — every permission the app asks for and exactly what it does with it — is in the <a href="https://qubbo-dev.github.io/Privacy-Policy/" style="color:var(--haze)">privacy policy</a>.</p>
+    <p class="fineprint">The full detail — every permission the app asks for and exactly what it does with it — is in the <a href="https://qubbo-dev.github.io/Privacy-Policy/">privacy policy</a>.</p>
   </div>
 </section>
 
-<hr class="perf shell rise">
-
 <!-- ============================ PRICING ========================= -->
-<section id="price">
+<section id="price" class="band">
   <div class="shell">
     <div class="act-head rise">
-      <p class="chapter"><span>Premium</span></p>
+      <p class="chapter" data-icon="star"><span>Premium</span></p>
       <h2>Free is a real app. Premium takes the ceiling off.</h2>
       <p class="lede">Everything you've read about so far is in the free version. Premium only removes limits — it never locks a feature away behind a wall.</p>
     </div>
 
     <div class="plans">
-      <article class="plan glass stub rise">
+      <article class="plan stub rise">
         <div class="plan-head">
           <span class="plan-name">Free</span>
           <span class="plan-price">€0</span>
           <span class="plan-sub">No trial, no card, no account.</span>
         </div>
-        <hr class="perf" style="opacity:.5">
+        <hr class="perf">
         <div class="plan-body">
           <ul class="ticks">
             <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg><span>Unlimited concerts across all three modes</span></li>
@@ -948,14 +1532,14 @@ footer{ padding-block:2.6rem 3.5rem; color:var(--dim); font-size:.86rem }
         </div>
       </article>
 
-      <article class="plan pro glass stub rise">
+      <article class="plan pro stub rise">
         <div class="plan-head">
           <span class="plan-tag">7 days free</span>
           <span class="plan-name">Premium</span>
           <span class="plan-price">€2.99 <span>/ month</span></span>
           <span class="plan-sub">or €19.99 a year — about seven months free.</span>
         </div>
-        <hr class="perf" style="opacity:.5">
+        <hr class="perf">
         <div class="plan-body">
           <ul class="ticks">
             <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg><span><b>Unlimited photos and videos</b> on every concert</span></li>
@@ -968,19 +1552,66 @@ footer{ padding-block:2.6rem 3.5rem; color:var(--dim); font-size:.86rem }
       </article>
     </div>
 
-    <p class="fineprint">Prices shown in euro and may differ by region — the App Store shows your own. Subscriptions renew automatically until cancelled, and you can cancel any time in your Apple ID settings.</p>
+    <p class="fineprint">Prices shown in euro and may differ by region — the App Store shows your own. Subscriptions renew automatically until cancelled, and you can cancel any time in your Apple Account settings.</p>
+  </div>
+</section>
+
+<!-- ============================ QUESTIONS ======================= -->
+<!-- What a stranger from an ad asks first. Every answer is checked against the
+     app: the limits in PremiumStore.swift, prices and the free week in
+     gig1.storekit, iPad in TARGETED_DEVICE_FAMILY, the languages in
+     AppLanguage (English by default), the Apple Music gate in MusicKitService. -->
+<section id="faq" class="questions">
+  <div class="shell">
+    <div class="act-head rise">
+      <p class="chapter" data-icon="question"><span>Questions</span></p>
+      <h2>Good to know before you download.</h2>
+    </div>
+
+    <div class="faq rise">
+      <details class="faq-item">
+        <summary>Is Gigtick free?</summary>
+        <div class="faq-a"><p>Yes. The free version is the whole app: unlimited concerts, setlists, playlists, artist pages, tickets, the weather, badges and iCloud sync. Premium lifts three limits (25 photos or videos per concert, 5 concerts from Smart Import, 7 Instant Tracks) and adds the full stats and Year in Review. It's €2.99 a month or €19.99 a year, both start with a free week, and the App Store shows you the price where you live.</p></div>
+      </details>
+      <details class="faq-item">
+        <summary>Does it upload my photos anywhere?</summary>
+        <div class="faq-a"><p>No. Your photos and videos stay in your Photos library. Gigtick keeps a reference to each one rather than a copy, so they take no extra space, and Smart Import looks through your library on the device itself, with Apple's Vision framework. Not a single photo is uploaded to us.</p></div>
+      </details>
+      <details class="faq-item">
+        <summary>Do I need an account?</summary>
+        <div class="faq-a"><p>No, there's nothing to sign up for. Your concerts move between your own devices through your iCloud, in Apple's private database, and that's free.</p></div>
+      </details>
+      <details class="faq-item">
+        <summary>Which devices does it work on?</summary>
+        <div class="faq-a"><p>iPhone and iPad with iOS 26 or iPadOS 26. On iPhone that means an iPhone 11 or newer, or an iPhone SE from the 2nd generation on.</p></div>
+      </details>
+      <details class="faq-item">
+        <summary>Where do the setlists come from?</summary>
+        <div class="faq-a"><p>From setlist.fm, where fans log what was played at every show. Gigtick shows the setlist from the date you were there and links back to it on setlist.fm. With an Apple Music subscription you can turn it into a playlist in your library.</p></div>
+      </details>
+      <details class="faq-item">
+        <summary>Can I cancel Premium?</summary>
+        <div class="faq-a"><p>Any time, in your Apple Account's subscription settings. Cancel during the free week and you pay nothing.</p></div>
+      </details>
+      <details class="faq-item">
+        <summary>Which languages does it speak?</summary>
+        <div class="faq-a"><p>English and Slovak. It starts in English, and you can switch in Settings.</p></div>
+      </details>
+    </div>
   </div>
 </section>
 
 <!-- ============================ CLOSER ========================== -->
 <section class="closer">
   <div class="shell">
-    <h2 class="rise">How many gigs<br>have you forgotten?</h2>
-    <p class="lede rise">Point Gigtick at your camera roll and find out.</p>
-    <div class="hero-cta rise">
-      <a class="badge-link" href="https://apps.apple.com/app/apple-store/id6783332108?pt=129066596&amp;ct=web&amp;mt=8" style="--bw:212px">
-        <svg class="badge" viewBox="0 0 119.66407 40" role="img" aria-label="Download on the App Store"><use href="#appstore-badge"/></svg>
-      </a>
+    <div class="closer-panel panel">
+      <h2 class="rise">How many gigs<br>have you forgotten?</h2>
+      <p class="lede rise">Point Gigtick at your camera roll and find out.</p>
+      <div class="hero-cta rise">
+        <a class="badge-link" href="https://apps.apple.com/app/apple-store/id6783332108?pt=129066596&amp;ct=web&amp;mt=8" style="--bw:212px">
+          <svg class="badge" viewBox="0 0 119.66407 40" role="img" aria-label="Download on the App Store"><use href="#appstore-badge"/></svg>
+        </a>
+      </div>
     </div>
   </div>
 </section>
@@ -989,8 +1620,8 @@ footer{ padding-block:2.6rem 3.5rem; color:var(--dim); font-size:.86rem }
 
 <footer>
   <div class="shell foot">
-    <div style="display:flex; align-items:center; gap:.7rem">
-      <span class="mark" style="width:26px; height:26px; border-radius:7px"></span>
+    <div class="foot-brand">
+      <span class="mark" aria-hidden="true"></span>
       <span class="mono">Gigtick 1.2 · iOS 26</span>
     </div>
     <div class="foot-links">
@@ -1015,9 +1646,22 @@ footer{ padding-block:2.6rem 3.5rem; color:var(--dim); font-size:.86rem }
   // can rise a word at a time when the section arrives. Runs before the
   // observer, or a heading already on screen would snap instead of animating.
   document.querySelectorAll('section h2').forEach(function (heading) {
+    // A highlighted phrase (<em>) rises as one piece instead. Its gradient is
+    // background-clip:text, which only reaches text the element holds itself:
+    // split into words it would restart on every word, and set on the <em>
+    // it can't see text inside moving children, which then goes invisible.
+    heading.querySelectorAll('em').forEach(function (em) {
+      var mover = document.createElement('span');
+      while (em.firstChild) mover.appendChild(em.firstChild);
+      em.appendChild(mover);
+      em.classList.add('w');
+    });
+
     var walker = document.createTreeWalker(heading, NodeFilter.SHOW_TEXT, null);
     var textNodes = [], node;
-    while ((node = walker.nextNode())) textNodes.push(node);
+    while ((node = walker.nextNode())) {
+      if (!node.parentNode.closest('em')) textNodes.push(node);
+    }
 
     textNodes.forEach(function (text) {
       var frag = document.createDocumentFragment();
@@ -1050,10 +1694,63 @@ footer{ padding-block:2.6rem 3.5rem; color:var(--dim); font-size:.86rem }
     });
   }, { rootMargin: '0px 0px -12% 0px', threshold: 0.05 });
 
+  // The stagger goes out as --d rather than as transition-delay, so the CSS can
+  // delay the entrance alone (not a card's hover) and time the pieces inside
+  // an element — its icon, its list — after the element itself.
   targets.forEach(function (el, i) {
-    el.style.transitionDelay = (i % 4) * 70 + 'ms';
+    el.style.setProperty('--d', (i % 4) * 70 + 'ms');
     io.observe(el);
   });
+})();
+</script>
+
+<script>
+(function () {
+  // A soft light follows the pointer inside a card (.card::before). Desktop
+  // pointers only; on a phone this never even listens.
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  document.addEventListener('pointermove', function (e) {
+    var card = e.target.closest && e.target.closest('.card');
+    if (!card) return;
+    var r = card.getBoundingClientRect();
+    card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+    card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+  }, { passive: true });
+})();
+</script>
+
+<script>
+(function () {
+  // The theme toggle. The script in <head> has already picked light or dark;
+  // this flips it on a tap and remembers the choice, and until someone has
+  // chosen it keeps following the system as that changes (an evening switch).
+  var root = document.documentElement;
+  var button = document.querySelector('.theme-toggle');
+  var meta = document.querySelector('meta[name="theme-color"]');
+  var system = window.matchMedia ? matchMedia('(prefers-color-scheme: dark)') : null;
+
+  function saved() { try { return localStorage.getItem('theme'); } catch (e) { return null; } }
+  function apply(theme) {
+    root.setAttribute('data-theme', theme);
+    if (meta) meta.setAttribute('content', theme === 'dark' ? '#0B0810' : '#FFFFFF');
+    if (button) button.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+  }
+  apply(root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light');
+
+  if (button) button.addEventListener('click', function () {
+    var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    // a soft cross-fade where the browser can draw one, an instant switch elsewhere
+    var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (document.startViewTransition && !still) document.startViewTransition(function () { apply(next); });
+    else apply(next);
+  });
+
+  if (system) {
+    var follow = function () { if (!saved()) apply(system.matches ? 'dark' : 'light'); };
+    if (system.addEventListener) system.addEventListener('change', follow);
+    else if (system.addListener) system.addListener(follow);
+  }
 })();
 </script>
 

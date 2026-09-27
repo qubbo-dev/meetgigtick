@@ -26,14 +26,40 @@ branch → `main` / `root`**. First build takes a minute or two.
 Everything lives in `index.html`. The design tokens are at the very top of
 the `<style>` block:
 
-- `--room`, `--stage` — the dark ground
+- `--bg`, `--band` — the white ground and the faint lilac that every other
+  section sits on (add `class="band"` to a section to put it there)
+- `--ink` … `--ink-4` — text, from headings down to decoration. `--ink-3` is
+  the lightest colour allowed for running text.
 - `--violet`, `--rose`, `--indigo`, `--amber` — the app's own accent colours,
   taken from `AccentPalette.swift`. `--rose` is Attended, `--indigo` is
   Upcoming, `--violet` is Wishlist, and the page uses them for those three
-  things only.
-- `.glass` — the liquid-glass panel. Change it once and every panel follows.
+  things only. They're too light for text on white, so each has a deepened
+  `--…-ink` twin; the `.c-rose` / `.c-violet` / … classes set both, plus a
+  pale tint for icon squares.
+- `.card` — the white panel with its hairline and soft shadow. Change it once
+  and every panel follows.
+- `.panel` — the lilac stage with a violet light top left and a rose one
+  bottom right. It opens the page (the hero, whose phones step out through
+  its bottom edge) and closes it (the last App Store button).
 - `.perf` / `.stub` — the ticket perforation and the notched stub shape used
   by the pricing cards.
+
+**Dark mode.** Every colour that differs between light and dark is a token
+in `:root`, and the **Dark** block (`:root[data-theme="dark"]`) holds its dark
+value. A small script in `<head>` sets `data-theme` before the first paint: the
+choice made with the moon/sun button in the nav if there is one (saved in
+`localStorage`), otherwise the system setting. A new colour goes in as a token
+with both values, never written straight into a rule, or it will be wrong in
+one of the two themes.
+
+Everything that moves lives in the **Motion** block near the end of the
+styles: the hero assembling on load, the feature strip, the phones rising
+with the scroll (CSS scroll timelines, so they only run where the browser
+supports them), the icons and the pricing tickets. None of it is needed for
+the page to work, and `prefers-reduced-motion` switches all of it off. One
+rule to keep: don't animate anything that carries a soft gradient (the hero
+washes, the glows behind the phones, the closing panel). A moving layer loses
+the dithering a still one gets, and the faint gradients band into rings.
 
 The logo itself is not `assets/icon.png` — it's a 96px copy of the icon
 inlined as a data URI in the `--logo` custom property, because a relative
